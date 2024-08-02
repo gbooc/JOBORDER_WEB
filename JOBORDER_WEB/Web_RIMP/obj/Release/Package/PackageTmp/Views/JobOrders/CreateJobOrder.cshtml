@@ -1,0 +1,331 @@
+﻿@model IEnumerable<Web_RIMP.Models.CreateJobOrderModel>
+
+@{
+    ViewBag.Title = "CreateJobOrder";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var FullName = Request.Cookies["Fullname"].Value.ToString();
+    var Department = Request.Cookies["Department"].Value.ToString();
+    var EmpID = Request.Cookies["EmpID"].Value.ToString().Trim();
+
+}
+<link rel="stylesheet" href="~/Content/css/CreateJobOrder.css">
+<script src="~/Content/custom/JobOrders/CreateJobOrder.js"></script>
+<script src="~/Content/js/jspdf.debug.js"></script>
+
+<link rel="stylesheet" href="~/Content/css/jquery-ui.css">
+<script src="~/Content/js/jquery-ui.js"></script>
+
+<style>
+
+    .ui-autocomplete {
+        z-index: 2147483647;
+    }
+</style>
+
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<label style="display:none;" id="lbl-user-category">@ViewBag.CCCategory</label>
+<label style="display:none;" id="lblCreationOfJo">@ViewBag.JOAvailability</label>
+<label style="display:none;" id="lblTempAccess">@ViewBag.JOTempAccess</label>
+<label style="display:none;" id="lblEmpID">@EmpID</label>
+
+<div id="dvContainer">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="page-title">Job Orders</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        &nbsp; Create Job Orders
+                    </li>
+                </ul>
+            </div>
+            <div class="col-auto float-right ml-auto">
+                <a href="#" class="btn btn-danger" id="createBtn" data-toggle="modal" data-target=".bs-example-modal-new1">
+                    @*createJo('@CodeNumber','Software','8','@Application','0')*@
+                    <h6><i class="fa fa-pencil-square" style="font-size:18px;"></i> New Job Order</h6>
+                </a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card-group m-b-30">
+                <div class="card w-100 p-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <span class="dash-widget-icon"><i class="fa fa-bullhorn"></i></span>
+                            </div>
+                            <div class="dash-widget-info">
+                                <h1><b>@ViewBag.UnassignedCount</b></h1>
+                                <h4 class="mb-3">Unassigned JO</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-100 p-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3" style="font-size:15px;font-weight:bold;">
+                            <div>
+                                <span class="dash-widget-icon"><i class="fa fa-users"></i></span>
+                            </div>
+                            <div class="dash-widget-info">
+                                <h1><b>@ViewBag.AssignedCount</b></h1>
+                                <h4 class="mb-3">Assigned JO</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-100 p-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3" style="font-size:15px;font-weight:bold;">
+                            <div>
+                                <span class="dash-widget-icon"><i class="fa fa-cogs"></i></span>
+                            </div>
+                            <div class="dash-widget-info">
+                                <h1><b>@ViewBag.HardwareJoCount</b></h1>
+                                <h4 class="mb-3">Hardware JO</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card w-100 p-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3" style="font-size:15px;font-weight:bold;">
+                            <div>
+                                <span class="dash-widget-icon"><i class="fa fa-codepen"></i></span>
+                            </div>
+                            <div class="dash-widget-info">
+                                <h1><b>@ViewBag.SoftwareJoCount</b></h1>
+                                <h4 class="mb-3">Software JO</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="card w-100 pl-4 pr-1">
+        <h4 class="mb-0"><b><i class="fa fa-gears fa-spin"></i> Available Programmer</b></h4>
+        <h6>There will be available programmer this coming {date}</h6>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="card card-table flex-fill">
+                <div class="card-header">
+                    <h4 class="card-title mb-0"><b><i class="fa fa-map"></i> On-queue Job Orders</b></h4>
+                </div>
+                <div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>JO Number</th>
+                                    <th>Requestor Name</th>
+                                    <th>Date Filed</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    var JO = item.JobOrder;
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.JobOrder)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Requestor)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.DateCreated)</td>
+                                        <td>
+                                            @switch (item.Status)
+                                            {
+                                                case "Created":
+                                                    <h5 class="badge bg-danger text-white" style="display: inline-block; min-width: 90px;">
+                                                        <i class="fa fa-flag"></i> @Html.DisplayFor(modelItem => item.Status)
+                                                    </h5>
+                                                    break;
+                                                case "Under Assessment":
+                                                    <h4 class="badge bg-warning" style="display: inline-block; min-width: 90px;">
+                                                        <i class="fa fa-flag"></i> @Html.DisplayFor(modelItem => item.Status)
+                                                    </h4>
+                                                    break;
+                                                case "Pending In-charge Assignment":
+                                                    <h5 class="badge bg-info text-white" style="display: inline-block; min-width: 90px;">
+                                                        <i class="fa fa-flag"></i> @Html.DisplayFor(modelItem => item.Status)
+                                                    </h5>
+                                                    break;
+
+                                            }
+
+                                        </td>
+                                        @*<td>
+                                                <a href="@Url.Action("JobOrderDetails", "JobOrders", new { JoNumber = JO })#AllJo" class="w3-btn w3-black w3-text-white w3-round-large w3-hover-shadow"><i class="fa fa-pencil-square"></i> View JO</a>
+                                            </td>*@
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form class="row g-3" onsubmit="submitJO(); return false">
+    <div class="modal fade bs-example-modal-new1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+            <!-- Modal Content: begins -->
+            <div class=" modal-content">
+                <!-- Modal Body -->
+                <div class="modal-body" id="mdBody">
+                    <div class="body-message">
+                        <div class="form-row">
+                            <div class="form-group col-md-12">
+                                <div class="form-row" style="font-size: 15px;">
+                                    <div class="form-group col-md-12">
+                                        <div>
+                                            <h1 style="margin-bottom: 10px;font-size:25px;font-weight:700;text-align:center;" id="lblTitleHeader"> <i class="fa fa-bullhorn fa-2x"></i> Create Job Order</h1>
+                                        </div>
+                                        <div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Requestor Name: </font>
+                                                    <input type="text" class="form-control" id="txtRequestorName" value="@FullName" onblur="EmployeeDepartment(this.value)" disabled />
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Department:</font>
+                                                    <input type="text" class="form-control" id="txtRequesterDept" value="@Department" disabled />
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Cost Center:</font>
+                                                    <input type="text" class="form-control" id="txt-costcenter" required readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div style="padding: 10px 10px 10px 10px;">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">SBU:</font>
+                                                    <select class="form-control" id="slct-sbu" onchange="getDivision(this)" required>
+                                                        <option value=""></option>
+                                                        @foreach (var SBU in ViewBag.SBU)
+                                                        {
+                                                            var ID = SBU.sbu_id;
+                                                            var Description = SBU.description;
+
+                                                            <option value="@ID">@Description</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Section:</font>
+                                                    <select class="form-control" id="slct-sect" onchange="setCCDetails()" required>
+                                                        <option value=""></option>
+                                                        @foreach (var sections in ViewBag.Sections)
+                                                        {
+                                                            var Costcenter = sections.cost_center;
+                                                            var DeptSection = sections.description;
+
+                                                            <option value="@Costcenter">@DeptSection</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Priority:</font>
+                                                    <select class="form-control" id="priorityID">
+                                                        <option value="3">Medium</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row" id="dv-workdetails">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Work Details:</font>
+                                                    <textarea class="form-control" id="workDetailsID" rows="5" required></textarea>
+                                                    <label id="display_count" style="font-family:Verdana;font-weight:400;"></label>
+                                                </div>
+                                            </div>
+                                            <div class="row" id="dv-purpose">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Purpose:</font>
+                                                    <textarea class="form-control" id="purposeID" rows="5" required></textarea>
+                                                    <label id="display_count-p" style="font-family:Verdana;font-weight:400;"></label>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                        <div style="padding: 0px 0px 10px 10px;" id="dv-approvedBy">
+                                            <div class="row">
+                                                <div class="col">
+                                                    @* <img src="~/Content/img/signtest.png" id="imgSign" />*@
+                                                    <div>
+                                                        <font id="lblTitleHeader">Noted By:</font>
+                                                        <select class="form-control" id="notedbyID" required>
+                                                            @foreach (var model in ViewBag.Managers)
+                                                            {
+                                                                var name = model.Manager;
+                                                                <option value="@name">@name</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div>
+                                                        <font id="lblTitleHeader">Approved By:</font>
+                                                        <select class="form-control" id="approvedbyID" required>
+                                                            @foreach (var model in ViewBag.Managers)
+                                                            {
+                                                                var name = model.Manager;
+                                                                <option value="@name">@name</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer" style="background-color:#7f0000;">
+                    <button class="btn btn-danger" type="submit" id="btn-submitjo"><i class="fa fa-send"></i> SUBMIT</button> @*onclick="submitJO()"*@
+                    <button class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> CANCEL</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade mdJODisable" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div class="row">
+                        <div class="col">
+                            <h3 class="text-lg-center w3-text-red"><b>Job Order Notice</b></h3>
+                            <h1 class="text-lg-center w3-text-blue-gray"><i class="fa fa-bell fa-2x"></i></h1>
+                            <h5><label id="lblMessageHold">@ViewBag.JOAvailabilityMessage</label></h5>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+        </div>
+    </div>
+</div>
+

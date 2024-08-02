@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="596fa9a719584964a5270e71d6856ed5" Name="Diagram1" ZoomLevel="78">
+        <EntityTypeShape EntityType="JOModel.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_apc_personnel" Width="1.5" PointX="2.375" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_applications" Width="1.5" PointX="0.75" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_category_type" Width="1.5" PointX="2.375" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_downtime" Width="1.5" PointX="7.25" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_downtime_cause" Width="1.5" PointX="7.25" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_downtime_type" Width="1.5" PointX="7.25" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_gantt_chart" Width="1.5" PointX="2.375" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_joborder" Width="1.5" PointX="3.875" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_joborder_category" Width="1.5" PointX="0.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_joborder_details" Width="1.5" PointX="2.375" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_network" Width="1.5" PointX="8.75" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_priority" Width="1.5" PointX="3.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_server" Width="1.5" PointX="8.75" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_status" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_telephone" Width="1.5" PointX="10.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_allocated_time" Width="1.5" PointX="0.875" PointY="12.625" />
+        <EntityTypeShape EntityType="JOModel.tbl_change_employee" Width="1.5" PointX="0.75" PointY="8.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_telephone_Rolie" Width="1.5" PointX="10.25" PointY="0.5" />
+        <EntityTypeShape EntityType="JOModel.tbl_preventive_pc" Width="1.875" PointX="7.375" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="JOModel.tbl_preventive_diagnose" Width="1.5" PointX="9.25" PointY="6.625" />
+        <EntityTypeShape EntityType="JOModel.tbl_preventive_services" Width="1.5" PointX="9.25" PointY="8.75" />
+        <EntityTypeShape EntityType="JOModel.tbl_preventive_maintenance" Width="1.5" PointX="10.75" PointY="6.625" />
+        <EntityTypeShape EntityType="JOModel.vw_Employee" Width="1.5" PointX="12.375" PointY="0.5" />
+        <EntityTypeShape EntityType="JOModel.tbl_employee_outside_rimp" Width="1.5" PointX="0.75" PointY="10.375" />
+        <EntityTypeShape EntityType="JOModel.vw_Managers" Width="1.5" PointX="14" PointY="0.5" />
+        <EntityTypeShape EntityType="JOModel.tbl_cc_category" Width="1.5" PointX="6.25" PointY="9.75" />
+        <EntityTypeShape EntityType="JOModel.tbl_employees" Width="1.5" PointX="6.25" PointY="11.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_sbu" Width="1.5" PointX="4.625" PointY="13.25" />
+        <EntityTypeShape EntityType="JOModel.tbl_sbu_costcenter" Width="1.5" PointX="4.625" PointY="9.75" />
+        <EntityTypeShape EntityType="JOModel.tbl_sbu_division" Width="1.5" PointX="4.625" PointY="11.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_jo_cc_details" Width="1.5" PointX="6.25" PointY="13.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_managers_email" Width="1.5" PointX="4.625" PointY="14.875" />
+        <EntityTypeShape EntityType="JOModel.tbl_costcenter_meaning" Width="1.5" PointX="7.875" PointY="10.75" />
+        <EntityTypeShape EntityType="JOModel.tbl_sub_assignees" Width="1.5" PointX="7.875" PointY="12.625" />
+        <EntityTypeShape EntityType="JOModel.tbl_daily_report" Width="1.5" PointX="7.875" PointY="14.375" />
+        <EntityTypeShape EntityType="JOModel.vw_Emails" Width="1.5" PointX="12.5" PointY="2.625" />
+        <EntityTypeShape EntityType="JOModel.vw_ForApprovalJO" Width="1.5" PointX="14" PointY="2.5" />
+        <EntityTypeShape EntityType="JOModel.tbl_onhold_message" Width="1.5" PointX="12.375" PointY="6.625" />
+        <EntityTypeShape EntityType="JOModel.tbl_status_timeline" Width="1.5" PointX="12.375" PointY="8.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_jo_creation_availability" Width="1.5" PointX="8.75" PointY="4.375" />
+        <EntityTypeShape EntityType="JOModel.tbl_problems" Width="1.5" PointX="4" PointY="5.625" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,561 @@
+﻿@model Web_RIMP.Models.JobOrderDetailsModel
+@{
+    ViewBag.Title = "JobOrderDetails";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var Progress = Html.DisplayFor(Model => Model.ProgressRate) + "%";
+}
+
+
+<script src="~/Content/js/jspdf.debug.js"></script>
+<link rel="stylesheet" href="~/Content/css/JobOrderDetails.css">
+<script src="~/Content/custom/JobOrders/JobOrderDetails.js"></script>
+
+@*Hidden values*@
+<div style="display:none;">
+    <label id="lblJobNoID">@Html.DisplayFor(Model => Model.JoID)</label>
+    <label id="lblDetailsID">@Html.DisplayFor(Model => Model.JODetailsID)</label>
+    <label id="lblStatusID">@Html.DisplayFor(Model => Model.Status)</label>
+    <label id="lblDeptID">@Html.DisplayFor(Model => Model.DeptID)</label>
+    <label id="lblLoginAccount">@Request.Cookies["Fullname"].Value.ToString()</label>
+    <label id="lblLoginDept">@Request.Cookies["Department"].Value.ToString()</label>
+    <label id="lblTypeID">@Html.DisplayFor(Model => Model.TypeID)</label>
+</div>
+
+
+<div id="dvContainer">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-9">
+                <h2 class="page-title">Job Orders</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        &nbsp; Requested Job Order Details
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br />
+
+    <div class="row">
+        <div class="col-4">
+            <div class="card w-100 p-1">
+                <h4 class="text-danger"><b><i class="fa fa-address-book"></i> Job Order Request</b></h4>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">JO #:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblJobNo">@Html.DisplayFor(Model => Model.JobNumber)</label>
+                            </font>
+                        </div>
+                        <div class="col">
+                            <label id="lblTitleHeader">Requestor:</label>
+                            <font id="lblDetailsTitle"><label id="lblRequestor">@Html.DisplayFor(Model => Model.Requestor)</label></font>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Department:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblDepartment">@Html.DisplayFor(Model => Model.Department)</label>
+                            </font>
+                        </div>
+                        <div class="col">
+                            <label id="lblTitleHeader">Cost Center:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblCostCenter">@Html.DisplayFor(Model => Model.JO_Costcenter)</label>
+                            </font>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Type:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblJOType">@Html.DisplayFor(Model => Model.JoType)</label>
+                            </font>
+                        </div>
+                        <div class="col">
+                            <label id="lblTitleHeader">Date Filed:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblDateFiled">@Html.DisplayFor(Model => Model.Datefiled)</label>
+                            </font>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Standard Time:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblStandardTime">
+                                    @Html.DisplayFor(Model => Model.StandardTime)
+                                </label>
+                            </font>
+                        </div>
+                        <div class="col">
+                            <label id="lblTitleHeader">Actual time:</label>
+                            <font id="lblDetailsTitle">
+                                <label id="lblActualTime">@Html.DisplayFor(Model => Model.ActualTime)</label>
+                            </font>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Details:</label>
+                            <textarea class="form-control" rows="7" id="txtJODetails">@Html.DisplayFor(Model => Model.WorkDetails)</textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Purpose:</label>
+                            <textarea class="form-control" rows="6" id="txtJOPurpose">@Html.DisplayFor(Model => Model.WorkPurpose)</textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <font id="lblTitleHeader">Noted By:</font>
+                            <select class="form-control" id="notedbyID" required>
+                                <option value="@Html.DisplayFor(Model => Model.NotedBy)">@Html.DisplayFor(Model => Model.NotedBy)</option>
+                                @foreach (var model in ViewBag.Managers)
+                                {
+                                    var name = model.Manager;
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <font id="lblTitleHeader">Approved By:</font>
+                            <select class="form-control" id="approvedByID" required>
+                                <option value="@Html.DisplayFor(Model => Model.ApprovedBy)">@Html.DisplayFor(Model => Model.ApprovedBy)</option>
+                                @foreach (var model in ViewBag.Managers)
+                                {
+                                    var name = model.Manager;
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 h-100">
+            <div class="card w-100 p-1">
+                <h4 class="text-danger"><b><i class="fa fa-bullhorn"></i> Job Order Stages</b></h4>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col pl-0 pr-0">
+                            <div class="step-bar-wrapper">
+                                <svg aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1">
+                                    <defs>
+                                        <filter id="inset-shadow" x="-50%" y="-50%" width="150%" height="150%">
+                                            <feComponentTransfer in="SourceAlpha">
+                                                <feFuncA type="table" tableValues="1 0" />
+                                            </feComponentTransfer>
+                                            <feGaussianBlur stdDeviation="1.2" />
+                                            <feOffset dx="0" dy="0.5" result="offsetblur" />
+                                            <feFlood flood-color="rgba(	127,0,0, 0.5)" result="color" />
+                                            <feComposite in2="offsetblur" operator="in" />
+                                            <feComposite in2="SourceAlpha" operator="in" />
+                                            <feMerge>
+                                                <feMergeNode in="SourceGraphic" />
+                                                <feMergeNode />
+                                            </feMerge>
+                                        </filter>
+                                        <symbol id="icon-left" viewBox="0 0 51 32">
+                                            <title>left</title>
+                                            <path id="first" fill="#ececec" d="M59.992 13.423h-23.73c-2.481 0-4.708-1.527-5.726-3.817-2.608-5.726-8.652-9.543-15.459-8.843-7.316 0.763-13.233 6.871-13.678 14.251-0.573 8.907 6.489 16.223 15.268 16.223 6.235 0 11.579-3.69 13.932-9.034 1.018-2.29 3.372-3.69 5.853-3.69h23.539v-5.089z"></path>
+                                        </symbol>
+                                        <symbol id="icon-mid" viewBox="0 0 89 32">
+                                            <title>mid</title>
+                                            <path id="mid" fill="#ececec" d="M64.26 13.501c-2.531 0-4.803-1.558-5.842-3.895-2.272-4.868-6.945-8.373-12.592-8.957-0.065 0-0.065 0-0.13 0s-0.065 0-0.13 0c-0.325 0-0.584-0.065-0.909-0.065-0.195 0-0.389 0-0.519 0-0.195 0-0.389 0-0.519 0-0.325 0-0.584 0-0.909 0.065-0.065 0-0.065 0-0.13 0s-0.065 0-0.13 0c-5.582 0.584-10.32 4.089-12.527 9.022-1.039 2.337-3.31 3.895-5.842 3.895h-24.146v5.193h24.016c2.531 0 4.933 1.428 5.972 3.765 2.207 4.998 6.945 8.568 12.592 9.152 0 0 0.065 0 0.065 0 0.195 0 0.454 0.065 0.649 0.065 0.26 0 0.454 0 0.714 0 0.065 0 0.13 0 0.195 0 0 0 0 0 0.065 0 0 0 0 0 0.065 0s0.13 0 0.195 0c0.26 0 0.454 0 0.714 0 0.195 0 0.454 0 0.649-0.065 0 0 0.065 0 0.065 0 5.647-0.584 10.385-4.154 12.592-9.152 1.039-2.337 3.44-3.765 5.972-3.765h24.016v-5.193h-24.211z"></path>
+                                        </symbol>
+                                        <symbol id="icon-right" viewBox="0 0 61 32">
+                                            <title>right</title>
+                                            <path id="last" fill="#ececec" d="M1.4 13.423h23.666c2.481 0 4.708-1.527 5.726-3.817 2.608-5.726 8.652-9.543 15.459-8.843 7.38 0.763 13.233 6.871 13.678 14.251 0.573 8.907-6.489 16.223-15.268 16.223-6.235 0-11.579-3.69-13.932-9.034-1.018-2.29-3.372-3.69-5.853-3.69h-23.539v-5.089z"></path>
+                                        </symbol>
+                                    </defs>
+                                </svg>
+
+                                <ul class="step-wrapper">
+                                    <li class="" id="liCreated">
+                                        <span><a>Created</a></span>
+                                        <a>
+                                            <svg class="icon icon-left"><use xlink:href="#icon-left"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liAssessment">
+                                        <span><a>For Assessment</a></span>
+                                        <a>
+                                            <svg class="step step-mid"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+
+                                    <li class="" id="liAssigned">
+                                        <span><a>Assigned</a></span>
+                                        <a>
+                                            <svg class="step step-mid"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liDocuments">
+                                        <span><a>Documents</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liForReview">
+                                        <span><a>For Review</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liForProposal">
+                                        <span><a>For Proposal</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liForDevelopment">
+                                        <span><a>Development</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liTesting">
+                                        <span><a>User Testing</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-mid"></use></svg>
+                                        </a>
+                                    </li>
+                                    <li class="" id="liCompleted">
+                                        <span><a>Completed</a></span>
+                                        <a>
+                                            <svg class="step step-right"><use xlink:href="#icon-right"></use></svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col">
+                                                @*<div class="card w-100 pl-2 pr-3" role="alert" id="dvAnnouncement">
+                                                        <h5 class="mb-0"><b><i class="fa fa-thumb-tack"></i> <u><label id="lblAnnouncement"></label></u></b></h5>
+                                                        <h6 style="margin-top:-7px;"><label id="lblAnnouncementMessage">APC is looking for available person to work on this request.</label></h6>
+                                                    </div>*@
+                                                <div class="card w-100 pl-2 pr-3">
+                                                    <h4 class="card-title"><b><i class="fa fa-user-circle"></i> Job Order Details</b></h4>
+                                                    <div class="row">
+                                                        <div class="col-1">
+                                                            <div class="user-pic">
+                                                                <img class="rounded-circle" src="@Html.DisplayFor(Model => Model.ProgrammerPic)" alt="User picture" width="60">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col pl-0">
+                                                            <ul class="personal-info">
+                                                                <li>
+                                                                    <div class="title">Programmer:</div>
+                                                                    <div class="text">
+                                                                        <label id="lblAssignee">@Html.DisplayFor(Model => Model.Assignee)</label>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">Local #:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.APCLocalNumber)</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">JO Handled:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.JOHandled)</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">Approved Days:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.NumOfDays)</div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <div class="col pl-0">
+                                                            <ul class="personal-info">
+                                                                <li>
+                                                                    <div class="title">Date Started:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.DateStarted)</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">Date Assigned:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.DateAssigned)</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">Date Target:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.DateTarget)</div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="title">Date Ended:</div>
+                                                                    <div class="text">@Html.DisplayFor(Model => Model.DateEnded)</div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <hr />
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <h6 class="card-title"><b><i class="fa fa-cogs"></i> Development Information</b></h6>
+                                                            <div class="row">
+                                                                <div class="col-4">
+                                                                    <label id="lblDetailsTitle">Add Progress:</label>
+                                                                    <div class="input-group number-spinner">
+                                                                        <span class="input-group-btn">
+                                                                            <button class="btn btn-default" data-dir="dwn"><span class="fa fa-minus"></span></button>
+                                                                        </span>
+                                                                        <input type="text" class="form-control text-center" id="txtProgressRate" value="@Html.DisplayFor(Model => Model.ProgressRate)">
+                                                                        <span class="input-group-btn">
+                                                                            <button class="btn btn-default" data-dir="up"><span class="fa fa-plus"></span></button>
+                                                                        </span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <label id="lblDetailsTitle">Progress Bar:</label>
+                                                                    <div class="progress">
+                                                                        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="@Html.DisplayFor(Model => Model.ProgressRate)"
+                                                                             aria-valuemin="0" aria-valuemax="100" style="width: @Progress;">
+                                                                            <label id="lbl-progress">@Progress</label>
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="form-group col-6">
+                                                                    <label id="lblDetailsTitle">Diagnosis:</label>
+                                                                    <div class="input-group">
+                                                                        <textarea class="form-control" id="txtDiagnosis" rows="5">@Html.DisplayFor(Model => Model.Diagnosis)</textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group col-6">
+                                                                    <label id="lblDetailsTitle">Action Taken:</label>
+                                                                    <div class="input-group">
+                                                                        <textarea class="form-control" rows="5" id="txtActionTaken">@Html.DisplayFor(Model => Model.ActionTaken)</textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-row">
+                                                                <div class="form-group col">
+                                                                    <label id="lblDetailsTitle">Reason Of Delay:</label>
+                                                                    <div class="input-group">
+                                                                        <textarea class="form-control" rows="4" id="txtReasonOfDelay">@Html.DisplayFor(Model => Model.ReasonOfDelay)</textarea>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            <div class="btn-group mr-2" role="group" aria-label="First group">
+                                                                <button type="button" class="w3-btn w3-red" onclick="printJobOrder()"><i class="fa fa-print fa-2x"></i> Print Job Order </button>
+                                                                <button type="button" class="w3-btn w3-red" onclick="updateJobOrder()"><i class="fa fa-pencil-square fa-2x"></i> Save Changes</button>
+                                                                <a href="javascript:void(0)" type="button" class="w3-btn w3-red next" id="btnNext"><span> Next Stage <i class="fa fa-arrow-circle-right fa-2x"></i></span></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="card" style="max-height:900px;overflow-y:scroll;overflow-x:hidden;">
+                <div class="card-body">
+                    <div class="form-row">
+                        @*<div class="form-group col-5">
+                                <h4 class="text-danger"><b><i class="fa fa-battery-4"></i> Add Issues/Problems</b></h4>
+                                <div class="row">
+                                    <div class="col">
+                                        <label id="lblDetailsTitle">Issue:</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" id="txtIssue"></textarea>
+                                        </div>
+
+                                        <label id="lblDetailsTitle">Status</label>
+                                        <div class="input-group">
+                                            <select class="form-control">
+                                                <option>Ongoing</option>
+                                                <option>Resolve</option>
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-dark" style="margin-top:45px;" onclick="AddTimeAllocation()"><i class="fa fa-save"></i> Save Issue</button>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="form-group col-12">
+                            <h4 class="text-danger"><b><i class="fa fa-table"></i> All Issues/Problems</b></h4>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width:200px;">Date</th>
+                                                    <th>Issues</th>
+                                                    <th style="width:200px;">Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><input type="text" class="form-control" id="txtDateIssue" /></td>
+                                                    <td><textarea class="form-control" id="txtIssueDetails"></textarea></td>
+                                                    <td>
+                                                        <button class="btn btn-danger" onclick="addIssue('Add')"><i class="fa fa-pencil-square"></i> Add Issue</button>
+                                                        @*<select class="form-control" onchange="addIssue()" id="txtIssueStatus">
+                                                                <option></option>
+                                                                <option value="Ongoing">Ongoing</option>
+                                                                <option value="Resolve">Resolve</option>
+                                                            </select>*@
+                                                    </td>
+                                                </tr>
+                                                @foreach (var issues in ViewBag.JOIssues)
+                                                {
+                                                    var Datehappen = issues.date_happen;
+                                                    var Problem = issues.problem;
+                                                    var Status = issues.status;
+                                                    var ID = issues.p_ID;
+
+                                                    <tr>
+                                                        <td>@Datehappen</td>
+                                                        <td>@Problem</td>
+                                                        <td>
+                                                            <select class="form-control" onchange="addIssue(@ID)" id="drdStatus">
+
+                                                                @if (Status == "Ongoing")
+                                                                {
+                                                                    <option value="@Status">
+                                                                        @Status
+                                                                    </option>
+                                                                    <option value="Resolve">
+                                                                        Resolve
+                                                                    </option>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <option value="@Status">
+                                                                        @Status
+                                                                    </option>
+                                                                }
+                                                            </select>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div style="height:500px;">
+                        <h4 class="text-danger"><b><i class="fa fa-calendar"></i> Job Order Work Progress</b></h4>
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-row">
+                                    <div class="form-group col-3">
+                                        <label id="lblDetailsTitle">Date:</label>
+                                        <div class="input-group">
+                                            <input type="text" id="txtDateRendered" class="form-control" style="margin-top:15px;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label id="lblDetailsTitle">Time Rendered(Minutes):</label>
+                                        <div class="input-group">
+                                            <input type="text" id="txtTimeRendered" class="form-control" style="margin-top:15px;" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-3">
+                                        <label id="lblDetailsTitle">Remarks:</label>
+                                        <div class="input-group">
+                                            <textarea class="form-control" rows="2" id="txtRemarks"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <button class="btn btn-dark" style="margin-top:45px;" onclick="AddTimeAllocation()"><i class="fa fa-save"></i> Save Time Allocation</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover" id="tblTimeAllocation">
+                                <thead>
+                                    <tr>
+                                        <th>Day</th>
+                                        <th>Date</th>
+                                        <th>Time Rendered (Minutes)</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var time in ViewBag.AllocatedTime)
+                                    {
+                                        var Day = time.Day;
+                                        var Date = time.Date;
+                                        var Rendered = time.TimeRendered;
+                                        var Remarks = time.Remarks;
+                                        <tr>
+                                            <td>@Day</td>
+                                            <td>@Date</td>
+                                            <td>@Rendered</td>
+                                            <td>@Remarks</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade changestatus" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <h3><i class="fa fa-cogs fa-spin"></i>  Are you sure to proceed to new status?</h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#7f0000;">
+                <button class="btn btn-danger" type="submit" id="btn-submitjo" onclick="changeStatus()"><i class="fa fa-pencil"></i> Yes</button> @*onclick="submitJO()"*@
+                <button class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+            </div>
+        </div>
+    </div>
+</div>

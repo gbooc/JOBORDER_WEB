@@ -1,0 +1,186 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<Web_RIMP.Models.DailyReportModel>
+
+@{
+    ViewBag.Title = "AllDailyReport";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+    var EmpId = Request.Cookies["EmpID"].Value.ToString();
+
+}
+
+<link rel="stylesheet" href="~/Content/css/DailyReport.css">
+<script src="~/Content/custom/JobOrders/DailyReport.js"></script>
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-10">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">All Daily Report</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div class="cards" id="dvBody">
+    <div class="form-row">
+        <div class="col">
+
+        </div>
+        <div class="col-2" style="margin-bottom:20px;margin-top:30px;">
+            <div class="btn-group" role="group">
+                <a href="@Url.Action("DailyReport","Reports")#rDailyReport" class="btn btn-danger" id="createBtn"><i class="fa fa-paint-brush"></i> Add Daily Report</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-row">
+                <div class="col" id="dvDetails" style="margin-left: 20px;">
+                    <h3>Cost Center</h3>
+                    <canvas id="cc-reportchart" height="100"></canvas>
+                </div>
+                <div class="col-5">
+                    <div class="table-responsive" style="height:450px;">
+                        <div class="col-11" style="margin-left: 50px;">
+                            <table class="table table-striped table-dark table-hover table-responsive-sm" id="tbl-apc-incharge">
+                                <thead>
+                                    <tr>
+                                        <th style="width:70%;">In-Charge</th>
+                                        <th>..</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tb-apc-incharge" style="text-align: left;">
+                                    @foreach (var apc in ViewBag.Apc)
+                                    {
+
+                                        <tr>
+                                            <td style="width:70%;">@apc</td>
+                                            <td></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-5">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">All Daily Report Entries</p>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col">
+            <div class="col-md-12 col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-dark table-hover table-responsive-sm" id="tbl-reports">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th style="width:200px;">Date</th>
+                                <th style="width:150px;">Start</th>
+                                <th style="width:150px;">End</th>
+                                <th style="width:150px;">Mins</th>
+                                <th style="width:700px;">Activity</th>
+                                <th style="width:200px;">Cost Center</th>
+                                <th style="width:150px;">Company</th>
+                                <th style="width:25px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-reports">
+                            @{
+                                var PrevDate = "";
+                            }
+
+                            @foreach (var report in Model)
+                            {
+                                var Date = report.Date;
+
+                                <tr>
+                                    <td style="width:200px;">@Html.DisplayFor(modelItem => report.Date)</td>
+                                    <td style="width:150px;">@Html.DisplayFor(modelItem => report.TimeStart)</td>
+                                    <td style="width:150px;">@Html.DisplayFor(modelItem => report.TimeEnd)</td>
+                                    <td style="width:150px;">@Html.DisplayFor(modelItem => report.Mins)</td>
+                                    <td style="width:700px;">@Html.DisplayFor(modelItem => report.Activity)</td>
+                                    <td style="width:200px;">@Html.DisplayFor(modelItem => report.CostCenter)</td>
+                                    <td style="width:150px;text-align:center;">@Html.DisplayFor(modelItem => report.Company)</td>
+                                    <td style="width:25px;">
+
+                                        @if (PrevDate != Date)
+                                        {
+                                            <button class="btn btn-info" onclick="resendEmail('@EmpId','@Date')" data-bs-toggle="tooltip" data-bs-placement="top" title="Resend Email"><i class="fa fa-send"></i></button>
+                                        }
+                                    </td>
+                                </tr>
+                                PrevDate = report.Date;
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- end of wrap -->
+            <!-- end of container -->
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="col-2" id="swPagerID" style="color:white;">
+                Showing @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                out of @Model.PageCount pages
+            </div>
+        </div>
+        <div class="col">
+            @Html.PagedListPager(Model, page => Url.Action("AllDailyReport", new { page }))
+        </div>
+    </div>
+</div>
+<br />
+
+
+<div class="modal fade md-confirmation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered modal-sm">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="dvDetails">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Send Email</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div style="display:none;">
+                                <label id="lbl-empid"></label>
+                                <label id="lbl-datesent"></label>
+                            </div>
+                            <h4> <i class="fa fa-send-o"></i> Re-send report now?</h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-5">
+
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary" onclick="sendEmail()"><i class="fa fa-check-square-o"></i> Yes</button>
+                            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+        </div>
+    </div>
+</div>

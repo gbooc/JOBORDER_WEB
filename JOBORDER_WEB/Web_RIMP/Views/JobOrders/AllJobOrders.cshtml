@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "AllJobOrders";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+}
+<script src="~/Content/custom/JobOrders/AllJobOrder.js"></script>
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group" id="topNav">
+                    <button class="btn btn-danger" onclick="gotoAllHardware()" id="jo-type-hw" style="border-left:solid;color:white;">
+                        <i class="fa fa-cog fa-2x"></i>
+                        Hardware
+                    </button>
+                    <button class="btn btn-dark" onclick="gotoAllSoftware()" id="jo-type-sw" style="border-left:solid;">
+                        <i class="fa fa-laptop fa-2x"></i> Software
+                    </button>
+
+                </div>
+            </div>
+            <div class="col">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;float:right;margin-right:10px;">All Job Orders</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div id="dvContainer">
+    <div class="row">
+        <div class="col-7">
+
+        </div>
+        @*<div class="col" style="float:right;">
+            <div class="input-group">
+                <input type="text" id="txt-excel-start" class="form-control" placeholder="Start Date">
+                <input type="text" id="txt-excel-end" class="form-control" placeholder="End Date">
+                <button class="btn btn-success" onclick="exportToExcel()">
+                    <i class="fa fa-file-excel-o"></i> Export To Excel
+                </button>
+            </div>
+        </div>*@
+    </div>
+    <div id="hwID" class="w3 w3-animate-right">
+        @Html.Action("AllHardwareJO")
+    </div>
+    <div id="swID" style="display:none;" class="w3 w3-animate-right">
+        @Html.Action("AllSoftwareJO")
+    </div>
+
+</div>

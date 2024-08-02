@@ -1,0 +1,525 @@
+﻿@model IEnumerable<Web_RIMP.Models.UnassignedJOModel>
+
+@{
+    ViewBag.Title = "AllUnassignedJO";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var Count = 1;
+    var MessageID = 0;
+}
+
+<script src="~/Content/custom/JobOrders/UnassignedJO.js"></script>
+<script src="~/Content/js/chartjs/Chart.js"></script>
+<script src="~/Content/ckeditor5-richtextbox/ckeditor.js"></script>
+
+<link rel="stylesheet" href="~/Content/css/Unassigned.css">
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div id="dvContainer">
+    <div class="row">
+        <div class="col">
+            <ul class="nav nav-tabs" id="myTab" role="tablist" style="font-size:15px;font-weight:500;background-color:#CCD9DF;">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="fa fa-list-ul"></i> Unassigned JO</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#ongoingjo" role="tab" aria-controls="ongoingjo" aria-selected="false"><i class="fa fa-bar-chart-o"></i> On-going JO</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent" style="margin-left:10px;">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-10">
+                                    <div id="divHeader" class="custom-table">
+                                        <p id="tblLabel">All Unassigned JO</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-7">
+
+                                </div>
+                                <div class="col-5">
+                                    <div class="input-group">
+                                        <input type="text" id="txtSearchJONum" class="form-control" autofocus />
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark" type="button" id="btn-hw-search" onclick="SearchUnassignedJO('Under Assessment','')">
+                                                <i class="fa fa-edit"></i> Assign
+                                            </button>
+                                            <button class="btn btn-danger" onclick="SearchUnassignedJO('For Approval','To be deffered')"><i class="fa fa-exclamation-triangle"></i> Deffer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card card-table flex-fill">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped  table-hover" style="text-align:center;">
+                                                <thead class="thead-dark">
+                                                    <tr id="tblTr">
+                                                        <th style="width:270px;">JO #</th>
+                                                        <th style="width:300px;text-align:center;">Date Filed</th>
+                                                        <th style="width:400px;text-align:center;">Requestor</th>
+                                                        <th style="width:50px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-hw">
+                                                    @foreach (var model in Model)
+                                                    {
+                                                        var Jobno = model.JobNo;
+                                                        var Details = model.Details;
+                                                        var Requestor = model.Requestor;
+                                                        var Datefiled = model.DateFiled;
+
+                                                        <tr>
+                                                            <td style="width:270px;"><label id="lbl-jobno-@Count">@Jobno</label></td>
+                                                            <td style="width:270px;">@Datefiled</td>
+                                                            <td style="width:400px;">@Requestor</td>
+                                                            <td><button class="btn btn-dark"><i class="fa fa-pencil-square-o"></i></button></td>
+                                                        </tr>
+                                                        Count++;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        @*<table class="table table-striped table-dark table-hover table-responsive" id="tbl-deffered-jo" style="display:none;text-align:center;">
+                                                <thead class="thead-dark">
+                                                    <tr id="tblTr">
+                                                        <th style="width:270px;">JO #</th>
+                                                        <th style="width:300px;text-align:center;">Date Filed</th>
+                                                        <th style="width:400px;text-align:center;">Requestor</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-hw">
+                                                    @foreach (var model in ViewBag.DeferredJO)
+                                                    {
+                                                        var Jobno = model.JobNo;
+                                                        var Details = model.Details;
+                                                        var Requestor = model.Requestor;
+                                                        var Datefiled = model.DateFiled;
+
+                                                        <tr>
+                                                            <td style="width:270px;"><label id="lbl-jobno-@Count">@Jobno</label></td>
+                                                            <td style="width:270px;">@Datefiled</td>
+                                                            <td style="width:400px;">@Requestor</td>
+                                                        </tr>
+                                                        Count++;
+                                                    }
+                                                </tbody>
+                                            </table>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <br />
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <h4><b>Job Order Request Details</b></h4>
+                                                    <h3 id="lblDetailsHeader" style="color:white;">JO Details:</h3>
+                                                    <div class="alert alert-info" role="alert" id="alrtAssigning">
+                                                        <i class="fa fa-info-circle"></i>
+                                                        <label id="lblalrtAssigning">You are about to assign this JO.</label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <button class="btn btn-danger" onclick="showDefferedJo()" id="btnDisplay"><i class="fa fa-hand-stop-o fa-2x"></i> All Deferred JO</button>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">JO Number:</label>
+                                                    <input type="text" class="form-control" id="txtJONumber" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Request Details:</label>
+                                                    <textarea class="form-control" rows="5" id="txtJODetails"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Date Filed:</label>
+                                                    <input type="text" class="form-control" id="txtDateFiled" />
+                                                </div>
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Requestor:</label>
+                                                    <input type="text" class="form-control" id="txtRequestor" />
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Hardware:</label>
+                                                    <input type="text" class="form-control" id="txtHardware"/>
+                                                </div>
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Software</label>
+                                                    <input type="text" class="form-control" id="txtSoftware" />
+                                                </div>
+                                            </div>
+                                            <!--<div class="form-row">
+                                            <div class="form-group col-md">
+                                                <label id="lblDetailsTitle">Message ID:</label>
+                                                <select class="form-control" id="slctMessages" disabled>
+                                                    foreach (var apc in ViewBag.Messages)
+                                                    {
+                                                        <option value="apc.Message">
+                                                        //    apc.ID
+                                                        </option>-->
+                                            @*<label id="lbl-apc-@ApcID" style="display:none;">@apc.emp_name</label>*@
+                                            <!--}
+
+                                                    </select>
+                                                </div>
+                                            </div>-->
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Assignee:</label>
+                                                    <select class="form-control" id="txtAssignee">
+                                                        @foreach (var apc in ViewBag.Assignee)
+                                                        {
+                                                            var ApcID = apc.apc_id;
+                                                            <option>
+                                                                @apc.emp_name
+                                                            </option>
+                                                            <label id="lbl-apc-@ApcID" style="display:none;">@apc.emp_name</label>
+                                                        }
+
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-md">
+                                                    <label id="lblDetailsTitle">Date Target:</label>
+                                                    <input type="text" class="form-control" id="txtDateTarget" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-9">
+                                                    <div class="alert alert-secondary" role="alert" id="alrtAssigning" style="display:none;">
+                                                        <i class="fa fa-info-circle"></i> Assigning, please wait...
+                                                    </div>
+                                                    <div class="alert alert-success" role="alert" id="alrtAssigned" style="display:none;">
+                                                        <i class="fa fa-check-square"></i> Successfully assigned JO
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="btn-group" role="group" style="float:right;">
+                                                        <button class="btn btn-info" onclick="manageJo()" id="btnManageJO">
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-8">
+                                                    <h4><b>On Hold Message</b></h4>
+                                                </div>
+                                                <div class="col-4">
+                                                    <button class="btn btn-warning" onclick="displayAddMessage()"><i class="fa fa-file-text"></i> Add Message</button>
+                                                </div>
+                                            </div>
+                                            @*<div class="row">
+                                                    <div class="col">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-responsive-sm" id="tblOnHoldMessages">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th style="width:80px;">Message ID</th>
+                                                                        <th>Message</th>sB
+                                                                        <th style="width:50px;">Message</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var msg in ViewBag.Messages)
+                                                                    {
+                                                                        var message = msg.Message;
+                                                                        MessageID = msg.ID;
+                                                                        <tr>
+                                                                            <td style="width:80px;">@MessageID</td>
+                                                                            <td>@message</td>
+                                                                            <td style="width:50px;"><button class="btn btn-outline-danger"><i class="fa fa-edit"></i></button></td>
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                            <label id="lblMessageID" style="display:none;">@MessageID</label>
+                                                        </div>
+                                                    </div>
+                                                </div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="ongoingjo" role="tabpanel" aria-labelledby="ongoingjo">
+                    <div class="row">
+                        <div class="col-8">
+                            <div id="divHeader" class="custom-table">
+                                <p id="tblLabel">All On-going JO</p>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <br />
+                            <button class="btn btn-danger" onclick="exportToExcel()"><i class="fa fa-file-excel-o"></i> Export To Excel</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-7">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>By Incharge JO Chart</h4>
+                                    <p>Total: <label id="lbl-OngoingTotal"></label> </p>
+                                    <canvas id="graph-ongoing-jo" height="105"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h4>By Department On-going JO Chart</h4>
+                                    <p>Total: <label id="lbl-OngoingTotal"></label></p>
+                                    <canvas id="graph-dept-ongoingjo" height="150"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-7">
+                            <table class="table table-striped table-dark table-hover table-responsive" id="tbl-assignee-jos" style="text-align:center;">
+                                <thead class="thead-dark">
+                                    <tr id="tblTr">
+                                        <th style="width:300px;">Details</th>
+                                        <th style="width:180px;">Department</th>
+                                        <th style="width:150px;">Date Target</th>
+                                        <th style="width:200px;">Reason</th>
+                                        <th style="width:100px;">Progress</th>
+                                        <th style="width:150px;">Date Progress</th>
+                                        <th style="width:80px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tb-assignee-jos">
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-5">
+                            <table class="table table-striped table-dark table-hover table-responsive" id="tbl-assignee-jos-dept" style="text-align:center;">
+                                <thead class="thead-dark">
+                                    <tr id="tblTr">
+                                        <th style="width:400px;">Details</th>
+                                        <th style="width:150px;">Date Target</th>
+                                        <th style="width:200px;">In-charge</th>
+                                        <th style="width:100px;">Progress</th>
+                                        <th style="width:150px;">Date Progress</th>
+                                        <th style="width:50px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tb-assignee-jos-dept">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade md-confirmation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered modal-sm">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Update JobOrder</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5> <i class="fa fa-warning fa-2x"></i> Do you want to update JO?</h5>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+                <button class="btn btn-primary" onclick="updateAssignedJO()"><i class="fa fa-check-square-o"></i> Yes</button>
+                <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade mdMoveJO" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered modal-sm">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Hold JobOrder</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h5> <i class="fa fa-warning fa-2x"></i> Are you sure to hold JO # <label id="lblHoldJO"></label>?</h5>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+                <button class="btn btn-primary" onclick="updateAssignedJO()"><i class="fa fa-check-square-o"></i> Yes</button>
+                <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade mdNewMessage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-header">
+                <h4><i class="fa fa-mail-reply-all"></i> Add New JO On-hold Message</h4>
+            </div>
+            <div class="modal-body">
+                <div class="body-message">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    @* <textarea class="form-control" rows="3" id="txtMessage"></textarea>*@
+                                    <div id="toolbar-container"></div>
+
+                                    <!-- This container will become the editable. -->
+                                    <div id="txtMessage">
+                                        <p></p>
+                                    </div>
+
+                                    <script>
+                                        DecoupledEditor
+                                            .create(document.querySelector('#txtMessage'))
+                                            .then(txtMessage => {
+                                                const toolbarContainer = document.querySelector('#toolbar-container');
+
+                                                toolbarContainer.appendChild(txtMessage.ui.view.toolbar.element);
+                                            })
+                                            .catch(error => {
+                                                console.error(error);
+                                            });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+                <button class="btn btn-info" onclick="saveNewMessage()" id="jo-type-hw">
+                    <i class="fa fa-save"></i>
+                    Save Message
+                </button>
+                <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txtSoftware").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchSoftware", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.application_name, value: item.code_number,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+        });
+
+        $("#txtHardware").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchHardware", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.details, value: item.type_id,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+            });
+    })
+</script>
+

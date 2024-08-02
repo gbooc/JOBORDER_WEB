@@ -1,0 +1,452 @@
+﻿@model IEnumerable<Web_RIMP.Models.JobOrderDetailsModel>
+@{
+    ViewBag.Title = "MyJobOrder";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+    var Count = 1;
+    var EmpId = Request.Cookies["EmpID"].Value.ToString();
+}
+
+<script src="~/Content/js/chartjs/Chart.js"></script>
+<link rel="stylesheet" href="~/Content/css/Profile.css">
+<link rel="stylesheet" href="~/Content/css/JobOrderDetails.css">
+<link href='~/Content/calendar/bootstrap/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/core/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/daygrid/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/timegrid/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/list/main.css' rel='stylesheet' />
+
+
+<script src='~/Content/calendar/core/main.js'></script>
+<script src='~/Content/calendar/interaction/main.js'></script>
+<script src='~/Content/calendar/daygrid/main.js'></script>
+<script src='~/Content/calendar/timegrid/main.js'></script>
+<script src='~/Content/calendar/list/main.js'></script>
+<script src='~/Content/calendar/moment/main.js'></script>
+
+
+
+<script type="text/javascript" src="~/Content/js/datetimepicker/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/js/datetimepicker/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="~/Content/js/datetimepicker/tempusdominus-bootstrap-4.min.css" />
+
+@if (EmpId.Trim() != "g930192")
+{
+    foreach (var HW in ViewBag.HWGraphSummary)
+    {
+        <div style="display:none;">
+            <label id="lbl-hw-name_@Count">@HW.category</label>
+            <label id="lbl-hw-type_@Count">@HW.jocount</label>
+        </div>
+        Count++;
+    }
+    <script src="~/Content/custom/JobOrders/MyJobOrder.js"></script>
+
+    <label id="lbl-hw-total-count" style="display:none;">@Count</label>
+    <div id="dvContainer">
+        <div id="dvBody">
+            @*<div class="row">
+                    <div class="col-lg-12">
+                        <div class="profile-card-4 z-depth-3">
+                            <div class="card">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="card-body text-center rounded-top">
+                                            <div class="user-box">
+                                                <img src="@ViewBag.IdPicture" alt="user avatar">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="card-body">
+                                            <ul class="list-group shadow-none">
+                                                <li class="list-group-item">
+                                                    <div class="list-icon">
+                                                        <i class="fa fa-user-circle"></i>
+                                                    </div>
+                                                    <div class="list-details">
+                                                        <span>@ViewBag.FullName</span>
+                                                        <small>Name</small>
+                                                    </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="list-icon">
+                                                        <i class="fa fa-id-card-o"></i>
+                                                    </div>
+                                                    <div class="list-details">
+                                                        <span>@ViewBag.EmpId</span>
+                                                        <small>ID Number</small>
+                                                    </div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="list-icon">
+                                                        <i class="fa fa-building-o"></i>
+                                                    </div>
+                                                    <div class="list-details">
+                                                        <span>@ViewBag.Department</span>
+                                                        <small>Department</small>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+            <br />
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="nav nav-pills nav-pills-primary nav-justified">
+                        <li class="nav-item">
+                            <a href="javascript:void();" data-target="#profile" data-toggle="pill" class="nav-link active show"><span class="hidden-xs"><i class="fa fa-user fa-2x"></i> My Job Order</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="javascript:void();" data-target="#departmentjo" data-toggle="pill" class="nav-link"><span class="hidden-xs"><i class="fa fa-building fa-2x"></i> Department Approved JO</span></a>
+                        </li>
+                    </ul>
+                    <div class="tab-content p-3">
+                        <div class="tab-pane active show" id="profile">
+                            <br />
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="card card-table flex-fill">
+                                        <h3 class="w3-text-white w3-border-red"><span class="w3-round-small w3-deep-purple w3-animate-right"> <i class="fa fa-pie-chart"></i>  Pie Graph For All HW Job Order </span></h3>
+                                        <canvas id="my-hw-chart" height="455"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card card-table flex-fill">
+                                        <div class="table-responsive" style="height:500px;">
+                                            <table class="table table-striped table-hover table-responsive" id="tbl-myjo-summary" style="text-align:center;">
+                                                <thead>
+                                                    <tr id="tblTr">
+                                                        <th>Category</th>
+                                                        <th>Type</th>
+                                                        <th>Total</th>
+                                                        <th>Pending</th>
+                                                        <th>...</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-myjo-summary">
+                                                    @foreach (var HW in ViewBag.HWSummary)
+                                                    {
+                                                        <tr class="w3-hover-blue-gray">
+                                                            <td>@HW.category</td>
+                                                            <td>@HW.jotype</td>
+                                                            <td> <span class='w3-badge w3-deep-purple' style="font-size:12px;">@HW.jocount</span></td>
+                                                            <td><span class='w3-badge w3-deep-orange' style="font-size:12px;">@HW.Pending</span></td>
+                                                            <td>
+                                                                @if (HW.category == "Software")
+                                                                {
+                                                                    <button class="btn btn-warning" onclick="getAllMySWJO('@HW.category','')"><i class="fa fa-pencil-square"></i></button>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <button class="btn btn-danger" onclick="getAllMySWJO('@HW.category','@HW.jotype')"><i class="fa fa-pencil-square"></i></button>
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col">
+                                    <div id="divHeader" class="custom-table" style="width:80%;">
+                                        <p id="tblLabel">My JobOrders</p>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="input-group" id="txtSearch">
+                                        <input type="text" class="form-control" placeholder="Search JO" id="txt-myjo-search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark" type="button" id="btn-hw-search" onclick="myjoSearch('search','')">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button class="btn btn-info" type="button" onclick="reloadPage()">
+                                                <i class="fa fa-refresh"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="dv-myjo-sw" style="display:none;">
+                                <div class="col-3">
+                                    <div class="card card-table flex-fill">
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-responsive-lg" id="tbl-myjo-sw-summary">
+                                                <thead>
+                                                    <tr id="tblTr">
+                                                        <th>System Name</th>
+                                                        <th>Total</th>
+                                                        <th>Pending</th>
+                                                        <th style="width: 100px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-myjo-sw-summary">
+                                                    @foreach (var model in ViewBag.SWSummary)
+                                                    {
+                                                        var System = model.systemname;
+                                                        var SwCount = model.jocount;
+                                                        var Pending = model.Pending;
+                                                        <tr class="w3-hover-blue-gray">
+
+                                                            <td>@System</td>
+                                                            <td>
+                                                                <span class='w3-badge w3-deep-purple' style="font-size:12px;">@SwCount</span>
+                                                            </td>
+                                                            <td> <span class='w3-badge w3-cyan' style="font-size:12px;">@Pending</span></td>
+                                                            <td>
+                                                                <button class="btn btn-danger" onclick="myjoSearch('software', '@System')"><i class="fa fa-pencil-square-o"></i></button>
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card card-table flex-fill">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-responsive-lg" id="tbl-myjo-sw-details">
+                                                <thead>
+                                                    <tr id="tblTr">
+
+                                                        <th>Application</th>
+                                                        <th style="width:220px;">Status</th>
+                                                        <th>Assignee</th>
+                                                        <th>Target Date</th>
+                                                        <th>Date Ended</th>
+                                                        <th style="width: 100px;"></th>
+                                                        <th style="width: 100px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-myjo-sw-details">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" id="dv-myjo-hw">
+                                <div class="col">
+                                    <div class="card card-table flex-fill">
+
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-responsive-lg" id="tbl-myjo">
+                                                <thead>
+                                                    <tr id="tblTr">
+
+                                                        <th>Application</th>
+                                                        <th style="width:70px;">Status</th>
+                                                        <th>Assignee</th>
+                                                        @*<th>Date Filed</th>*@
+                                                        <th>Target Date</th>
+                                                        <th>Date Ended</th>
+                                                        <th style="width: 200px;"></th>
+                                                        <th style="width: 200px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-myjo">
+                                                    @foreach (var model in Model)
+                                                    {
+                                                        var JobNo = model.JobNumber;
+                                                        var Assignee = model.Assignee;
+                                                        var DetailsID = model.JODetailsID;
+                                                        var DateTarget = model.DateTarget;
+                                                        var DateAssigned = model.DateAssigned;
+                                                        <tr class="w3-hover-blue-gray">
+                                                            <td>@Html.DisplayFor(modelItem => model.JoTypeDetails)</td>
+                                                            <td style="width:80px;">
+                                                                @if (model.Status == "Closed")
+                                                                {
+                                                                    <div class="w3-round-medium w3-green">
+                                                                        <span class="fa fa-check"> Closed</span>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    if (model.Status == "Development")
+                                                                    {
+                                                                        <div class="w3-round w3-blue">
+                                                                            <span>Development</span>
+                                                                        </div>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <div class="w3-round w3-deep-orange">
+                                                                            <span class="fa fa-paperclip">  @Html.DisplayFor(modelItem => model.Status)</span>
+                                                                        </div>
+                                                                    }
+
+                                                                    @*<span class="badge badge-danger">
+                                                                            @Html.DisplayFor(modelItem => model.Status)
+                                                                        </span>*@
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                <a href="@Url.Action("MyJobOrder", new { page = 1, Name = Assignee })#AllJo">
+                                                                    <u>@Assignee</u>
+                                                                </a>
+                                                            </td>
+                                                            <td>@Html.DisplayFor(modelItem => model.DateTarget)</td>
+                                                            <td>@Html.DisplayFor(modelItem => model.DateEnded)</td>
+                                                            <td style="width: 200px;">
+                                                                <a href="#" onclick="loadGanttChart('@DetailsID', '@DateTarget', '@DateAssigned')" class="btn btn-outline-warning" id="createBtn">
+                                                                    <i class="fa fa-calendar" style="font-size:18px;"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td style="width: 200px;">
+                                                                <a href="@Url.Action("JobOrderDetails", "JobOrders", new { JoNumber = JobNo })#AllJo" class="btn btn-outline-success" id="createBtn">
+                                                                    <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/row-->
+                        </div>
+                        <div class="tab-pane" id="departmentjo">
+                            <div class="row">
+                                <div class="col">
+
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="input-group" id="deptTxtSearch">
+                                        <input type="text" class="form-control" placeholder="Search JO" id="depttxt-myjo-search">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-dark" type="button" id="btn-hw-dept" onclick="searchJODepartment()">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                            <button class="btn btn-info" type="button" onclick="reloadPage()">
+                                                <i class="fa fa-refresh"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card card-table flex-fill">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-responsive-lg" id="tbl-ongoing-dept">
+                                                <thead>
+                                                    <tr id="tblTr">
+                                                        <th>JO #.</th>
+                                                        <th>Details</th>
+                                                        <th>Requested By</th>
+                                                        <th>APC In-charge</th>
+                                                        <th width="50px">Status</th>
+                                                        <th>Progress</th>
+                                                        <th style="width: 30px;"></th>
+                                                        <th style="width: 30px;"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tb-ongoing-dept">
+                                                    @foreach (var model in ViewBag.DepartmentJO)
+                                                    {
+                                                        var JO = model.JONumber;
+                                                        var Request = model.Requestor;
+                                                        var Assignee = model.Assignee;
+                                                        var Status = model.Status;
+                                                        var Progress = model.ProgressRate;
+                                                        var Details = model.Details;
+                                                        var ProgressWidth = Progress + "%";
+                                                        var DetailsID = model.DetailsID;
+                                                        var DateTarget = model.DateTarget;
+                                                        var DateAssigned = model.DateAssigned;
+                                                        <tr class="w3-hover-blue-gray">
+                                                            <td>@JO</td>
+                                                            <td>@Details</td>
+                                                            <td>
+                                                                <a href="@Url.Action("MyJobOrder", new { page = 1, Name = Request })#AllJo">
+                                                                    <u>@Request</u>
+                                                                </a>
+                                                            </td>
+                                                            <td>
+                                                                <a href="@Url.Action("MyJobOrder", new { page = 1, Name = Assignee })#AllJo">
+                                                                    <u>@Assignee</u>
+                                                                </a>
+                                                            </td>
+                                                            <td style="text-align:center;">@Status</td>
+                                                            <td>
+                                                                <div class="progress">
+                                                                    <div class="progress-bar progress-bar-striped bg-warning" role="progressbar" aria-valuenow="@Progress"
+                                                                         aria-valuemin="0" aria-valuemax="100" style="width:@ProgressWidth">
+                                                                        <label id="lbl-progress">@ProgressWidth</label>
+
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td style="width: 30px;">
+                                                                <a href="#" onclick="loadGanttChart('@DetailsID', '@DateTarget', '@DateAssigned')" class="btn btn-outline-warning" id="createBtn">
+                                                                    <i class="fa fa-calendar" style="font-size:18px;"></i>
+                                                                </a>
+                                                            </td>
+                                                            <td style="width: 30px;">
+                                                                <a href="@Url.Action("JobOrderDetails", "JobOrders", new { JoNumber = JO })#AllJo" class="btn btn-outline-success" id="createBtn">
+                                                                    <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+else
+{
+    <script src="~/Content/custom/JobOrders/JOAllDepartment.js"></script>
+    @*@Html.Action("ResultByDepartment")*@
+}
+
+<div class="modal fade bs-example-modal-new4" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="divHeader" class="custom-table">
+                    <div style="display:inline-block;width:100%;">
+                        <p id="tblLabel" style="display:inline-block;">Add Gantt Chart</p>
+                    </div>
+                </div>
+                <div class="body-message">
+                    <br />
+                    <div class="row" style="width:100%;min-height:200px;">
+                        <div class="col">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

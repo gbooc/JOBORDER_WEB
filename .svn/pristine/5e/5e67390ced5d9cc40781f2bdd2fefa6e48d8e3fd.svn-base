@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Login_Layout.cshtml";
+}
+
+<div id="main_container">
+    <section>
+        <div class="box">
+
+            <div class="square" style="--i:0;"></div>
+            <div class="square" style="--i:1;"></div>
+            <div class="square" style="--i:2;"></div>
+            <div class="square" style="--i:3;"></div>
+            <div class="square" style="--i:4;"></div>
+            <div class="square" style="--i:5;"></div>
+
+            <div class="container">
+                <div class="form">
+                    <h2>LOGIN To JobOrder</h2>
+                    @* <form>*@
+                    <div class="inputBx">
+                        <input type="text" id="empidTxt" required="required">
+                        <span>Login</span>
+                    </div>
+                    <div class="inputBx password">
+                        <input id="password-input" type="password" name="password" required="required">
+                        <span>Password</span>
+                        <a href="#" class="password-control" onclick="return show_hide_password(this);"></a>
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <div class="inputBx" id="errorBadge" style="display:none;">
+                    <small class="w3-red"> <i class="fa fa-times"></i> Incorrect credential, please try again.</small>
+                    </div>
+                    <label class="remember">
+                        <input type="checkbox">
+                        Remember
+                    </label>
+                    <div class="inputBx">
+                        <input type="submit" value="Log in" onclick="login()" />
+                        &nbsp;
+                        <div class="spinner-border" role="status" style="display:none;" id="spinnerLoader">
+                        </div>
+                    </div>
+                    @*</form>*@
+                    <p>Forgot password? <a href="#">Click Here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@*<div id="main_container">
+        <font id="projectName">Job Order</font>
+        <div class="outer">
+            <div class="middle">
+                <div class="inner">
+                    <div class="container">
+                        <div class="box"></div>
+                        <div class="w3-animate-zoom">
+                            <div class="container-forms">
+                                <div class="container-form">
+                                    <div class="form-item log-in">
+                                        <div class="table">
+                                            <div class="table-cell">
+                                                <div id="fullcontrol">
+                                                    <div class="logo">
+                                                        <img src="~/Content/img/idcard1.png" style="width: 130px;margin-top:-12px;" />
+                                                    </div>
+                                                    <font id="labels">Employee ID:</font>
+                                                    <input class="form-control" type="text" id="empidTxt">
+
+                                                    <font id="labels">Password:</font>
+                                                    <input class="form-control" type="password" id="passwordTxt">
+
+                                                    <a href="#" class="forgotpassword">Forgot password?</a>
+                                                </div>
+                                                <input type="submit" value="Login" id="btnLogin" onclick="login()"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@
+
+@*<div id="copyright">&#169; 2020 Ricoh Imaging Products (Phils.) Corp. | Developer: Grace M. Booc |</div>*@

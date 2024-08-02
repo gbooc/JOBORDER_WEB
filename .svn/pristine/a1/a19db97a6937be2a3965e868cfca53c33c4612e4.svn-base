@@ -1,0 +1,365 @@
+﻿@model IEnumerable<Web_RIMP.Models.DailyReportModel>
+@{
+    ViewBag.Title = "DailyReport";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var FullName = Request.Cookies["Fullname"].Value.ToString();
+    var EmpId = Request.Cookies["EmpID"].Value.ToString();
+}
+
+<link rel="stylesheet" href="~/Content/css/DailyReport.css">
+<script src="~/Content/custom/JobOrders/DailyReport.js"></script>
+
+<link rel="stylesheet" href="~/Content/clockpicker/jquery-clockpicker.css">
+<script src="~/Content/clockpicker/bootstrap-clockpicker.js"></script>
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-10">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">Daily Report</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+<div class="card-body p-0 pb-3 text-center" id="teOverlay">
+    <img src="~/Content/gif/email.gif" id="imgLoader" style="width:100px;" />
+</div>
+
+<label id="lbl-empid" style="display:none;">@EmpId</label>
+<div class="cards" id="dvBody">
+    <div class="row" style="margin-top:10px;">
+        <div class="col">
+            <div class="form-row">
+                <div class="col-2" style="margin-bottom:20px;margin-top:30px;">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-danger" style="margin-top:10px;" onclick="duplicate()"><i class="fa fa-plus"></i> Add Time</button>
+                        <button class="btn btn-warning" data-toggle="modal" data-target=".md-confirmation" style="margin-top:10px;"><i class="fa fa-send-o"></i> Email Report</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-4">
+                    <small id="tblLabel" style="font-size:17px;"><i class="fa fa-warning"> Please add time accordingly. Time is in 24 Hrs(military format).</i></small>
+                </div>
+            </div>
+            <div class="form-row" style="display:none;">
+                <div class="form-group col-4">
+                    <label id="tblLabel">Name: </label>
+                    <input type="text" class="form-control" style="margin-left:20px;" id="txt-apcname" value="@FullName" readonly>
+                </div>
+                <div class="col-2">
+                    <label id="tblLabel">ID No.: </label>
+                    <input type="text" class="form-control" style="margin-left:20px;" id="txt-apcid" value="@EmpId" readonly>
+                </div>
+                <div class="col">
+
+                </div>
+                <div class="form-group col-2">
+                    <label id="tblLabel">Date: </label>
+                    <input type="text" class="form-control" id="txt-date" value="@DateTime.Today.ToShortDateString()" readonly>
+                </div>
+                <div class="form-group col-2">
+                    <label id="tblLabel">Day: </label>
+                    <input type="text" class="form-control" id="txt-day" value="@DateTime.Today.ToString("dddd")" readonly>
+                </div>
+            </div>
+            <div id="dvDetails">
+                <div class="form-row" id="dv-reportheader">
+                    <div class="form-group col-2" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Time</h4>
+                    </div>
+                    <div class="form-group col-1" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Minutes</h4>
+                    </div>
+                    <div class="form-group col-4" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Activity</h4>
+                    </div>
+                    <div class="form-group col-2" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Job Order #:</h4>
+                    </div>
+                    <div class="form-group col-2" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Cost Center</h4>
+                    </div>
+                    <div class="form-group col" id="dv-rptheadervalue">
+                        <h4 id="tblLabel">Company</h4>
+                    </div>
+                </div>
+                <div id="dv1">
+                    <div class="form-row" id="dv-rptcontent">
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="input-group clockpicker">
+                                        <input type="text" class="form-control" id="txt-timestart1" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group clockpicker">
+                                        <input type="text" class="form-control" id="txt-timeend1" onchange="getminutes(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-1" id="dv-rptheadervalue">
+                            <input type="text" class="form-control" id="txt-minutes1" />
+                        </div>
+                        <div class="form-group col-4" id="dv-rptheadervalue">
+                            <textarea class="form-control" id="txt-activity1"></textarea>
+                        </div>
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-jobno1" onchange="linkJO(this)">
+                                <option value=""></option>
+                                @foreach (var model in ViewBag.AllOngoingJO)
+                                {
+                                    var JobNo = model;
+                                    <option value="@JobNo">@JobNo</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-costcenter1">
+                                <option value=""></option>
+                                @foreach (var costcenter in ViewBag.CostCenter)
+                                {
+                                    <option value="@costcenter.cc_description">@costcenter.cc_description</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-company1">
+                                <option>RIMP</option>
+                                <option>VIETNAM</option>
+                                <option>JAPAN</option>
+                                <option>LGC</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="dv2">
+                    <div class="form-row" id="dv-rptcontent">
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <div class="form-row">
+                                <div class="col">
+                                    <div class="input-group clockpicker">
+                                        <input type="text" class="form-control" id="txt-timestart2" />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group clockpicker">
+                                        <input type="text" class="form-control" id="txt-timeend2" onchange="getminutes(this)" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-1" id="dv-rptheadervalue">
+                            <input type="text" class="form-control" id="txt-minutes2" />
+                        </div>
+                        <div class="form-group col-4" id="dv-rptheadervalue">
+                            <textarea class="form-control" id="txt-activity2"></textarea>
+                        </div>
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-jobno2" onchange="linkJO(this)">
+                                <option value=""></option>
+                                @foreach (var model in ViewBag.AllOngoingJO)
+                                {
+                                    var JobNo = model;
+                                    <option value="@JobNo">@JobNo</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-2" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-costcenter2">
+                                <option value=""></option>
+                                @foreach (var costcenter in ViewBag.CostCenter)
+                                {
+                                    <option value="@costcenter.cc_description">@costcenter.cc_description</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col" id="dv-rptheadervalue">
+                            <select class="form-control" id="slct-company2">
+                                <option>RIMP</option>
+                                <option>VIETNAM</option>
+                                <option>JAPAN</option>
+                                <option>LGC</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-row">
+        <div class="form-group col">
+            <div class="table-responsive">
+                <div class="col" id="dvDetails" style="width:98%;margin-left:10px;">
+                    <table class="table table-hover table-responsive-lg" id="tbl-jo">
+                        <thead>
+                            <tr>
+                                <th style="width:40%;">Details</th>
+                                <th>Date Target</th>
+                                <th>Requestor</th>
+                                <th>Progress Rate</th>
+                                <th>...</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-jo">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-2">
+            <button class="btn btn-info" style="margin-top:10px;height:50px; " onclick="submitReport()" id="createBtn"><i class="fa fa-save fa-2x"></i> Save Report</button>
+        </div>
+    </div>
+
+
+    <br />
+    <div class="row">
+        <div class="col-5">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">Daily Report Entries</p>
+            </div>
+        </div>
+        <div class="col">
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+        <div class="col">
+            <div class="table-responsive">
+                <div class="col" id="dvDetails" style="width:98%;margin-left:10px;">
+                    <table class="table table-striped table-hover table-responsive-lg" id="tbl-reports">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Start</th>
+                                <th>End</th>
+                                <th>Mins</th>
+                                <th style="width:25%;">Activity</th>
+                                <th>Cost Center</th>
+                                <th>Company</th>
+                                <th style="width:15px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-reports">
+                            @foreach (var model in Model)
+                            {
+                                var TimeStarted = model.TimeStart;
+                                var TimeEnded = model.TimeEnd;
+                                var Activity = model.Activity;
+                                var CostCenter = model.CostCenter;
+                                var Company = model.Company;
+                                var Mins = model.Mins;
+
+                                var timestart = "txt-timestart" + model.ID;
+                                var timeend = "txt-timeend" + model.ID;
+                                var mins = "txt-minutes" + model.ID;
+                                var activity = "txt-activity" + model.ID;
+                                var slctCC = "slct-costcenter" + model.ID;
+                                var company = "slct-company" + model.ID;
+
+
+                                var Id = model.ID;
+                                <tr>
+                                    <td>
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" id="@timestart" value="@TimeStarted" onchange="getminutes(this)" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="input-group clockpicker">
+                                            <input type="text" class="form-control" id="@timeend" value="@TimeEnded" onchange="getminutes(this)" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control" value="@Mins" id="@mins" />
+                                    </td>
+                                    <td style="width:25%;">
+                                        <textarea class="w3-input" id="@activity">@Activity</textarea>
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="@slctCC">
+                                            <option value="@CostCenter">@CostCenter</option>
+                                            @foreach (var costcenter in ViewBag.CostCenter)
+                                            {
+                                                <option value="@costcenter.cc_description">@costcenter.cc_description</option>
+                                            }
+                                        </select>
+
+                                    </td>
+                                    <td>
+                                        <select class="form-control" id="@company">
+                                            <option>@Company</option>
+                                            <option>RIMP</option>
+                                            <option>VIETNAM</option>
+                                            <option>JAPAN</option>
+                                            <option>LGC</option>
+                                        </select>
+
+                                    </td>
+                                    <td style="width:15px;">
+                                        <button class="btn btn-outline-dark" style="margin-top:18px;" onclick="updateReport(@Id)"><i class="fa fa-save"></i></button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade md-confirmation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered modal-sm">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body"id="dvDetails">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Send Email</p>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h4> <i class="fa fa-send-o"></i> Send email now?</h4>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-5">
+
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary" onclick="exportAndSend()"><i class="fa fa-check-square-o"></i> Yes</button>
+                            <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('.clockpicker').clockpicker({
+        'default': 'now',
+        vibrate: true,
+        placement: "bottom",
+        align: "left",
+        twelvehour: false,
+        autoclose: true
+    });
+</script>

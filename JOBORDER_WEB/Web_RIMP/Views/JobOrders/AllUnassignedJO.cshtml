@@ -1,0 +1,463 @@
+﻿@model IEnumerable<Web_RIMP.Models.UnassignedJOModel>
+
+@{
+    ViewBag.Title = "AllUnassignedJO";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+}
+
+<script src="~/Content/custom/JobOrders/UnassignedJO.js"></script>
+<script src="~/Content/js/chartjs/Chart.js"></script>
+<script src="~/Content/ckeditor5-richtextbox/ckeditor.js"></script>
+
+<link rel="stylesheet" href="~/Content/css/Unassigned.css">
+
+<style>
+
+    .ui-autocomplete {
+        z-index: 2147483647;
+    }
+</style>
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div id="dvContainer">
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="page-title">Job Orders</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        &nbsp; Unassigned/Assigned Job Orders
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br />
+    <label id="lblAvailable" style="display:none;">@ViewBag.JOAvailability</label>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="nav nav-tabs nav-tabs-solid nav-justified" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a href="#tabDashboard" id="idDashboard" aria-current="page" class="nav-link active router-link-exact-active active" data-toggle="tab" role="tab" aria-controls="tabDashboard" aria-selected="true">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tabUnassinged" id="idUnassigned" class="nav-link" role="tab" data-toggle="tab" aria-controls="tabUnassigned" aria-selected="false">Unassigned </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#tabAssignedJO" id="idAssigned" class="nav-link" role="tab" data-toggle="tab" aria-controls="tabAssigned" aria-selected="false">Assigned</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="tabDashboard" role="tabpanel" aria-labelledby="idDashboard">
+                    <div class="row">
+                        <div class="col-md-5 text-center">
+                            <div class="card flex-fill">
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fa fa-users"></i> JO By Assignee</h4>
+                                    <canvas id="graph-ongoing-jo" height="150"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <div class="card flex-fill">
+                                <div class="card-body">
+                                    <h4 class="card-title"><i class="fa fa-building"></i> JO By Department</h4>
+                                    <canvas id="graph-dept-ongoingjo" height="150"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center">
+                            <div class="card">
+                                <div class="card-body" style="margin-top:-27px;">
+                                    <h5 class="card-title"><i class="fa fa-balance-scale"></i> Software Schedule</h5>
+                                    <ul class="list-group">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card flex-fill">
+                                <div class="card-body">
+                                    <h3 class="card-title"><i class="fa fa-cog fa-spin"></i> JO Details</h3>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover table-responsive text-justify" id="tbl-assignee-jos">
+                                            <thead class="text-left">
+                                                <tr>
+                                                    <th>Assignee</th>
+                                                    <th>Details</th>
+                                                    <th>Department</th>
+                                                    <th>Date Target</th>
+                                                    <th>Reason</th>
+                                                    <th>Progress</th>
+                                                    <th>Progress Updated</th>
+                                                    <th>..</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tb-assignee-jos" class="text-center">
+                                                <tr>
+                                                    <td style="width:53%;"></td>
+                                                    <td><h1 class="text-lg-center"><i class="fa fa-bullhorn"></i> No Data Return</h1></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="tabUnassinged" role="tabpanel" aria-labelledby="idUnassigned">
+                    <div class="row">
+                        <div class="col-sm-3 col-md-4 col-lg-3 col-xl-3 col-12">
+                            <label id="lblDetailsTitle">Job Order Creation:</label>
+                            <div>
+
+                                <input type="radio" value="Yes" name="rdJOCreation" id="rdEnable" onclick="JOAvailability(this);" class="w3 w3-radio" /> Enable
+                                <input type="radio" value="No" name="rdJOCreation" id="rdDisable" onclick="JOAvailability(this);" class="w3 w3-radio" /> Disable
+                            </div>
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-3 col-12">
+                            <label id="lblDetailsTitle">Job Order No.:</label>
+                            <input type="text" class="form-control" id="txtJobOrder" autofocus />
+                        </div>
+                        <div class="col-sm-3 col-md-3 col-lg-3 col-xl-2 col-12 p-4">
+                            <button class="w3-btn w3-green w3-text-white w3-round-large" onclick="SearchSelectedJO()">
+                                <i class="fa fa-search fa-2x"></i> Search Job Order
+                            </button>
+                        </div>
+                        <div class="col-sm-4 col-md-4 col-lg-4 col-xl-4 col-12 p-4">
+                            <button class="w3-btn w3-black w3-text-white w3-round-large" data-toggle="modal" data-target=".mdJODisableMessage">
+                                <i class="fa fa-envelope-o fa-2x"></i> JO Message
+                            </button>
+                            <button class="w3-btn w3-red w3-text-white w3-round-large" data-toggle="modal" data-target=".mdAccess">
+                                <i class="fa fa-folder fa-2x"></i> Temp Access
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card flex-fill">
+                                <div class="card-body">
+                                    <table class="table table-striped table-hover" id="tblongoingjo">
+                                        <thead>
+                                            <tr>
+                                                <th>JO No.</th>
+                                                <th>Details</th>
+                                                <th>Status</th>
+                                                <th>Type</th>
+                                                <th>Date Filed</th>
+                                                <th>Requestor</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbongoingjo">
+                                            @foreach (var item in Model)
+                                            {
+                                                var Category = item.Category;
+                                                var JONum = item.JobNo;
+                                                <tr>
+                                                    <td>@Html.DisplayFor(modelItem => item.JobNo)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.Details)</td>
+                                                    <td>
+                                                        @if (item.Status == "Created")
+                                                        {
+                                                            <panel class="badge bg-danger text-white">
+                                                                <i class="fa fa-flag-o fa-2x"></i> @Html.DisplayFor(modelItem => item.Status)
+                                                            </panel>
+                                                        }
+                                                        else
+                                                        {
+                                                            <panel class="badge w3-deep-orange text-white">
+                                                                <i class="fa fa-users fa-2x"></i> @Html.DisplayFor(modelItem => item.Status)
+                                                            </panel>
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        @if (Category == "Software")
+                                                        {
+                                                            <panel class="badge bg-success text-white">
+                                                                <i class="fa fa-codepen fa-2x"></i> @Html.DisplayFor(modelItem => item.Category)
+                                                            </panel>
+                                                        }
+                                                        else
+                                                        {
+                                                            <panel class="badge bg-info text-white">
+                                                                <i class="fa fa-cogs fa-2x"></i> @Html.DisplayFor(modelItem => item.Category)
+                                                            </panel>
+                                                        }
+
+                                                    </td>
+                                                    <td>@Html.DisplayFor(modelItem => item.DateFiled)</td>
+                                                    <td>@Html.DisplayFor(modelItem => item.Requestor)</td>
+                                                    <td>
+                                                        <button class="btn btn-dark" onclick="OpenJODetails('@JONum')"><i class="fa fa-pencil"></i> Assigned</button>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="tabAssignedJO" role="tabpanel" aria-labelledby="idAssigned">
+                    <div class="row">
+                        <div class="col">
+                          <button class="w3-button bg-danger">Generate Report</button>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<form class="row g-3" onsubmit="updateAssignedJO(); return false">
+    <div class="modal fade assignjo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered modal-xl">
+            <!-- Modal Content: begins -->
+            <div class=" modal-content">
+                <!-- Modal Body -->
+                <div class="modal-body" id="mdBody">
+                    <div class="body-message">
+                        <h2 class="modal-title text-center"><i class="fa fa-cogs fa-spin"></i> Assign Job Order</h2>
+                        <hr />
+                        <div class="row">
+                            <div class="col">
+                                <font id="lblTitleHeader">Job Order No.: </font>
+                                <input type="text" class="form-control" id="txtJONum" value="" />
+                            </div>
+                            <div class="col">
+                                <font id="lblTitleHeader">Requestor: </font>
+                                <input type="text" class="form-control" id="txtRequestorName" value="" />
+                            </div>
+                            <div class="col">
+                                <font id="lblTitleHeader">Date Filed: </font>
+                                <input type="text" class="form-control" id="txtDatefiled" value="" />
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col">
+                                <font id="lblTitleHeader">Details: </font>
+                                <textarea class="form-control" rows="8" id="txtDetails"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <font id="lblTitleHeader">Status: </font>
+                                <select class="form-control" id="txtStatus">
+                                    @foreach (var status in ViewBag.Status)
+                                    {
+                                        var Status = status.status;
+                                        var ID = status.status_id;
+                                        <option value="@ID">@Status</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col">
+                                <font id="lblTitleHeader">Hardware: </font>
+                                <select class="form-control" id="ddHardwares">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <font id="lblTitleHeader">Software: </font>
+                                <input type="text" class="form-control" id="txtSoftware" value="" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <font id="lblTitleHeader">Assignee:</font>
+                                <select class="form-control" id="txtAssignee" required>
+                                    <option value=""></option>
+                                    @foreach (var apc in ViewBag.Assignee)
+                                    {
+                                        var ApcID = apc.apc_id;
+                                        <option>
+                                            @apc.emp_name
+                                        </option>
+                                    }
+
+                                </select>
+                            </div>
+                            <div class="col">
+                                <font id="lblTitleHeader">Date Target: </font>
+                                <input type="text" class="form-control" id="txtDateTarget" value="" />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+                <!-- Modal Footer -->
+                <div class="modal-footer" style="background-color:#7f0000;">
+                    <button class="w3-btn w3-blue w3-text-white w3-round-large" type="submit" id="btn-submitjo"><i class="fa fa-send"></i> SUBMIT</button> @*onclick="submitJO()"*@
+                    <button class="w3-btn w3-red w3-text-white w3-round-large" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> CANCEL</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<div class="modal fade mdJODisableMessage" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <h3 class="text-lg-center">Job Order On Hold Message</h3>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Message:</label>
+                            <textarea class="form-control" rows="5" id="txtNewMessage">@ViewBag.JOAvailabilityMessage</textarea>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info" id="alertSave1" style="display:none;">
+                        Saved!
+                    </div>
+                    <div class="spinner-grow" style="display:none;width: 1rem; height: 1rem;" role="status" id="dvPleaseWait1">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color:#7f0000;">
+
+                <button class="w3-btn w3-blue w3-text-white w3-round-large" type="submit" onclick="UpdateMessage()"><i class="fa fa-send"></i> SUBMIT</button> @*onclick="submitJO()"*@
+                <button class="w3-btn w3-black w3-text-white w3-round-large" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade mdAccess" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <h3 class="text-lg-center">Temp Access</h3>
+                    <div class="row">
+                        <div class="col">
+                            <label id="lblTitleHeader">Employee Name:</label>
+                            <input type="text" class="form-control" id="txtTempEmpName" />
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-info" id="alertSave" style="display:none;">
+                        Saved!
+                    </div>
+                    <div class="spinner-grow" style="display:none;width: 1rem; height: 1rem;" role="status" id="dvPleaseWait">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="background-color:#7f0000;">
+
+                <button class="w3-btn w3-blue w3-text-white w3-round-large" type="submit" onclick="UpdateMessage()"><i class="fa fa-send"></i> SUBMIT</button> @*onclick="submitJO()"*@
+                <button class="w3-btn w3-black w3-text-white w3-round-large" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txtSoftware").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchSoftware", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.application_name, value: item.code_number,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+        });
+
+        $("#txtTempEmpName").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchRegisteredEmployees", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.emp_name, value: item.emp_id,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+            });
+    })
+</script>
+

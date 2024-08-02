@@ -1,0 +1,432 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="JOModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="tbl_apc_personnel">
+    <Key>
+      <PropertyRef Name="apc_id" />
+    </Key>
+    <Property Name="apc_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="emp_id" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="emp_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_applications">
+    <Key>
+      <PropertyRef Name="app_id" />
+    </Key>
+    <Property Name="app_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="apc_id" Type="Int32" />
+    <Property Name="code_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="application_name" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="user_department" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_category_type">
+    <Key>
+      <PropertyRef Name="type_id" />
+    </Key>
+    <Property Name="type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="category_id" Type="Int32" />
+    <Property Name="code_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="details" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="standard_time" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_joborder_category">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_joborder_details">
+    <Key>
+      <PropertyRef Name="details_id" />
+    </Key>
+    <Property Name="details_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="type_id" Type="Int32" />
+    <Property Name="status_id" Type="Int32" />
+    <Property Name="sw_codenumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="date_started" Type="DateTime" Precision="3" />
+    <Property Name="date_ended" Type="DateTime" Precision="3" />
+    <Property Name="details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="purpose" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="diagnosis" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="action_taken" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="apc_noted_by" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="apc_approved_by" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+    <Property Name="progress_rate" Type="Int32" />
+    <Property Name="assignee" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+    <Property Name="remarks" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="actual_time" Type="Int32" />
+    <Property Name="sw_standard_time" Type="Int32" />
+    <Property Name="sw_gantt_chart" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+    <Property Name="has_scope" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_priority">
+    <Key>
+      <PropertyRef Name="priority_id" />
+    </Key>
+    <Property Name="priority_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="priority_name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_status">
+    <Key>
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Name="status_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="status" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+  </EntityType>
+  <EntityType Name="vw_Employee">
+    <Key>
+      <PropertyRef Name="emp_no" />
+      <PropertyRef Name="dept_id" />
+    </Key>
+    <Property Name="emp_no" Type="Int32" Nullable="false" />
+    <Property Name="emp_id" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+    <Property Name="emp_name" Type="String" MaxLength="30" FixedLength="true" Unicode="false" />
+    <Property Name="dept_id" Type="String" MaxLength="6" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="dept_name" Type="String" MaxLength="20" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="vw_Managers">
+    <Key>
+      <PropertyRef Name="emp_id" />
+    </Key>
+    <Property Name="emp_id" Type="String" MaxLength="15" FixedLength="true" Unicode="false" Nullable="false" />
+    <Property Name="emp_name" Type="String" MaxLength="30" FixedLength="true" Unicode="false" />
+    <Property Name="dept_id" Type="String" MaxLength="6" FixedLength="true" Unicode="false" />
+    <Property Name="position" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityContainer Name="JOEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <EntitySet Name="tbl_apc_personnel" EntityType="Self.tbl_apc_personnel" />
+    <EntitySet Name="tbl_applications" EntityType="Self.tbl_applications" />
+    <EntitySet Name="tbl_category_type" EntityType="Self.tbl_category_type" />
+    <EntitySet Name="tbl_joborder_category" EntityType="Self.tbl_joborder_category" />
+    <EntitySet Name="tbl_joborder_details" EntityType="Self.tbl_joborder_details" />
+    <EntitySet Name="tbl_priority" EntityType="Self.tbl_priority" />
+    <EntitySet Name="tbl_status" EntityType="Self.tbl_status" />
+    <EntitySet Name="vw_Employee" EntityType="Self.vw_Employee" />
+    <EntitySet Name="vw_Managers" EntityType="Self.vw_Managers" />
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(JOModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(JOModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_joborder_classification" ReturnType="Collection(JOModel.sp_joborder_classification_Result)" />
+    <FunctionImport Name="sp_joborder_details" ReturnType="Collection(JOModel.sp_joborder_details_Result)" />
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
+    <FunctionImport Name="sp_hardware_counts" ReturnType="Collection(JOModel.sp_hardware_counts_Result)" />
+    <FunctionImport Name="sp_software_count" ReturnType="Collection(JOModel.sp_software_count_Result)" />
+    <FunctionImport Name="sp_developer_jo_summary" ReturnType="Collection(JOModel.sp_developer_jo_summary_Result)">
+      <Parameter Name="developer" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_all_apc_jo_count" ReturnType="Collection(JOModel.sp_all_apc_jo_count_Result)" />
+    <EntitySet Name="tbl_downtime_cause" EntityType="JOModel.tbl_downtime_cause" />
+    <EntitySet Name="tbl_downtime_type" EntityType="JOModel.tbl_downtime_type" />
+    <EntitySet Name="tbl_network" EntityType="JOModel.tbl_network" />
+    <EntitySet Name="tbl_server" EntityType="JOModel.tbl_server" />
+    <EntitySet Name="tbl_telephone" EntityType="JOModel.tbl_telephone" />
+    <FunctionImport Name="sp_server_downtime_details" ReturnType="Collection(JOModel.sp_server_downtime_details_Result)">
+      <Parameter Name="server_name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_network_downtime_details" ReturnType="Collection(JOModel.sp_network_downtime_details_Result)">
+      <Parameter Name="network_name" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="tbl_downtime" EntityType="JOModel.tbl_downtime" />
+    <FunctionImport Name="sp_tel_downtime_details" ReturnType="Collection(JOModel.sp_tel_downtime_details_Result)">
+      <Parameter Name="telephone" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_hw_jo_monthly_report" ReturnType="Collection(JOModel.sp_hw_jo_monthly_report_Result)">
+      <Parameter Name="date_filter" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_sw_jo_monthly_report" ReturnType="Collection(JOModel.sp_sw_jo_monthly_report_Result)">
+      <Parameter Name="date_filter" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="sp_get_my_jo" ReturnType="Collection(JOModel.sp_get_my_jo_Result)">
+      <Parameter Name="user" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="tbl_joborder" EntityType="JOModel.tbl_joborder" />
+    <FunctionImport Name="sp_export_excel" ReturnType="Collection(JOModel.sp_export_excel_Result)">
+      <Parameter Name="datefrom" Mode="In" Type="DateTime" />
+      <Parameter Name="dateended" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <EntitySet Name="tbl_gantt_chart" EntityType="JOModel.tbl_gantt_chart" />
+    <FunctionImport Name="sp_get_sw_actual_standard_time">
+      <Parameter Name="details_id" Mode="In" Type="String" />
+      <Parameter Name="type" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="sp_joborder_classification_Result">
+    <Property Type="Int32" Name="hw_type_id" Nullable="false" />
+    <Property Type="String" Name="hw_type_name" Nullable="true" MaxLength="500" />
+    <Property Type="Int32" Name="hw_type" Nullable="true" />
+    <Property Type="String" Name="hw_code_number" Nullable="true" />
+    <Property Type="String" Name="hw_details" Nullable="true" MaxLength="300" />
+    <Property Type="Int32" Name="hw_standard_time" Nullable="true" />
+    <Property Type="String" Name="sw_code_number" Nullable="true" />
+    <Property Type="String" Name="sw_app_name" Nullable="true" />
+    <Property Type="String" Name="sw_user_dept" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="sw_programmer" Nullable="true" MaxLength="200" />
+  </ComplexType>
+  <ComplexType Name="sp_joborder_details_Result">
+    <Property Type="Int32" Name="id" Nullable="false" />
+    <Property Type="Int32" Name="category_id" Nullable="true" />
+    <Property Type="String" Name="codenumber" Nullable="true" />
+    <Property Type="String" Name="jonumber" Nullable="true" />
+    <Property Type="String" Name="details" Nullable="true" />
+    <Property Type="String" Name="purpose" Nullable="true" />
+    <Property Type="String" Name="jo_type" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="jo_type_details" Nullable="true" MaxLength="300" />
+    <Property Type="Int32" Name="standard_time" Nullable="true" />
+    <Property Type="String" Name="jo_priority" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="jo_status" Nullable="false" MaxLength="500" />
+    <Property Type="String" Name="jo_diagnosis" Nullable="true" />
+    <Property Type="String" Name="jo_action_taken" Nullable="true" />
+    <Property Type="Int32" Name="jo_progress" Nullable="true" />
+    <Property Type="String" Name="jo_remarks" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="dev_app_name" Nullable="true" />
+    <Property Type="String" Name="assignee" Nullable="true" MaxLength="2000" />
+    <Property Type="DateTime" Name="datefiled" Nullable="true" Precision="23" />
+    <Property Type="String" Name="requestor" Nullable="true" MaxLength="1000" />
+    <Property Type="String" Name="req_approvedby" Nullable="true" MaxLength="1000" />
+    <Property Type="String" Name="req_notedby" Nullable="true" MaxLength="1000" />
+    <Property Type="DateTime" Name="date_started" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_needed" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="actual_time" Nullable="true" />
+    <Property Type="Int32" Name="hrs_of_ot" Nullable="true" />
+    <Property Type="String" Name="hr_shift" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="details_id" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="sp_hardware_counts_Result">
+    <Property Type="String" Name="hw_codenumber" Nullable="true" />
+    <Property Type="Int32" Name="count_email" Nullable="true" />
+    <Property Type="Int32" Name="count_tel" Nullable="true" />
+    <Property Type="Int32" Name="count_desktop" Nullable="true" />
+    <Property Type="Int32" Name="count_network" Nullable="true" />
+    <Property Type="Int32" Name="standard_time" Nullable="true" />
+    <Property Type="Int32" Name="actual_time" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_software_count_Result">
+    <Property Type="String" Name="sw_codenumber" Nullable="true" />
+    <Property Type="Int32" Name="standard_time" Nullable="true" />
+    <Property Type="Int32" Name="actual_time" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_developer_jo_summary_Result">
+    <Property Type="Int32" Name="count_all_jo" Nullable="true" />
+    <Property Type="Int32" Name="count_requirements" Nullable="true" />
+    <Property Type="Int32" Name="count_development" Nullable="true" />
+    <Property Type="Int32" Name="count_testing" Nullable="true" />
+    <Property Type="Int32" Name="count_debugging" Nullable="true" />
+    <Property Type="Int32" Name="count_orientation" Nullable="true" />
+    <Property Type="Int32" Name="count_hw_today" Nullable="true" />
+    <Property Type="Int32" Name="count_hw_total" Nullable="true" />
+    <Property Type="Int32" Name="count_sw_today" Nullable="true" />
+    <Property Type="Int32" Name="count_sw_total" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_all_apc_jo_count_Result">
+    <Property Type="String" Name="dev" Nullable="true" MaxLength="200" />
+    <Property Type="Int32" Name="today_total" Nullable="true" />
+    <Property Type="Int32" Name="overall_total" Nullable="true" />
+    <Property Type="Int32" Name="exceed_actual_time" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="tbl_downtime_cause">
+    <Key>
+      <PropertyRef Name="downtime_cause_id" />
+    </Key>
+    <Property Name="downtime_cause_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type_id" Type="Int32" />
+    <Property Name="hardware_description" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_downtime_type">
+    <Key>
+      <PropertyRef Name="downtime_type_id" />
+    </Key>
+    <Property Name="downtime_type_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_network">
+    <Key>
+      <PropertyRef Name="network_id" />
+    </Key>
+    <Property Name="network_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type_id" Type="Int32" />
+    <Property Name="network_code_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="location" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="tbl_server">
+    <Key>
+      <PropertyRef Name="server_id" />
+    </Key>
+    <Property Name="server_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type_id" Type="Int32" />
+    <Property Name="server_code_number" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="server_name" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+    <Property Name="server_uptime" Type="Int32" />
+  </EntityType>
+  <EntityType Name="tbl_telephone">
+    <Key>
+      <PropertyRef Name="tel_id" />
+    </Key>
+    <Property Name="tel_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type_id" Type="Int32" />
+    <Property Name="tel_name" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+    <Property Name="tel_code_number" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+    <Property Name="tel_location" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <ComplexType Name="sp_server_downtime_details_Result">
+    <Property Type="String" Name="server_name" Nullable="true" MaxLength="2000" />
+    <Property Type="DateTime" Name="datestarted" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="dateended" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="dowtime_mins" Nullable="true" />
+    <Property Type="String" Name="downtime_cause" Nullable="true" MaxLength="5000" />
+    <Property Type="String" Name="downtime_cause_details" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_network_downtime_details_Result">
+    <Property Type="String" Name="network_code_number" Nullable="true" />
+    <Property Type="DateTime" Name="datestarted" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="dateended" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="dowtime_mins" Nullable="true" />
+    <Property Type="String" Name="downtime_cause" Nullable="true" MaxLength="5000" />
+    <Property Type="String" Name="downtime_cause_details" Nullable="true" />
+  </ComplexType>
+  <EntityType Name="tbl_downtime">
+    <Key>
+      <PropertyRef Name="downtime_id" />
+    </Key>
+    <Property Name="downtime_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="downtime_type_id" Type="Int32" />
+    <Property Name="code_number" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+    <Property Name="datestarted_of_downtime" Type="DateTime" Precision="3" />
+    <Property Name="dateended_of_downtime" Type="DateTime" Precision="3" />
+    <Property Name="total_mins_of_downtime" Type="Int32" />
+    <Property Name="downtime_cause_id" Type="Int32" />
+    <Property Name="downtime_cause_details" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <ComplexType Name="sp_tel_downtime_details_Result">
+    <Property Type="String" Name="tel_code_number" Nullable="true" MaxLength="5000" />
+    <Property Type="DateTime" Name="datestarted" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="dateended" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="dowtime_mins" Nullable="true" />
+    <Property Type="String" Name="downtime_cause" Nullable="true" MaxLength="5000" />
+    <Property Type="String" Name="downtime_cause_details" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_hw_jo_monthly_report_Result">
+    <Property Type="String" Name="hw_codenumber" Nullable="true" />
+    <Property Type="Int32" Name="standard_time" Nullable="true" />
+    <Property Type="Int32" Name="actual_time" Nullable="true" />
+    <Property Type="Int32" Name="year_min" Nullable="true" />
+    <Property Type="Int32" Name="year_max" Nullable="true" />
+    <Property Type="String" Name="jonum" Nullable="true" />
+    <Property Type="String" Name="details" Nullable="true" />
+    <Property Type="DateTime" Name="datestarted" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="dateended" Nullable="true" Precision="23" />
+    <Property Type="String" Name="assignee" Nullable="true" MaxLength="2000" />
+    <Property Type="String" Name="requested_by" Nullable="true" MaxLength="1000" />
+  </ComplexType>
+  <ComplexType Name="sp_sw_jo_monthly_report_Result">
+    <Property Type="String" Name="hw_codenumber" Nullable="true" />
+    <Property Type="Int32" Name="standard_time" Nullable="true" />
+    <Property Type="Int32" Name="actual_time" Nullable="true" />
+    <Property Type="DateTime" Name="date_ended" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_needed" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="year_min" Nullable="true" />
+    <Property Type="Int32" Name="year_max" Nullable="true" />
+    <Property Type="String" Name="jonum" Nullable="true" />
+    <Property Type="String" Name="details" Nullable="true" />
+    <Property Type="String" Name="assignee" Nullable="true" MaxLength="2000" />
+    <Property Type="String" Name="requested_by" Nullable="true" MaxLength="1000" />
+    <Property Type="DateTime" Name="datestarted" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="dateended" Nullable="true" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="sp_get_my_jo_Result">
+    <Property Type="String" Name="job_no" Nullable="true" />
+    <Property Type="String" Name="app" Nullable="true" MaxLength="300" />
+    <Property Type="String" Name="status" Nullable="false" MaxLength="500" />
+    <Property Type="String" Name="assignee" Nullable="true" MaxLength="2000" />
+    <Property Type="DateTime" Name="date_filed" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_needed" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_started" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_ended" Nullable="true" Precision="23" />
+  </ComplexType>
+  <EntityType Name="tbl_joborder">
+    <Key>
+      <PropertyRef Name="jobno_id" />
+    </Key>
+    <Property Name="jobno_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="details_id" Type="Int32" />
+    <Property Name="job_no" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="priority_id" Type="Int32" />
+    <Property Name="date_filed" Type="DateTime" Precision="3" />
+    <Property Name="date_needed" Type="DateTime" Precision="3" />
+    <Property Name="shift_hrs" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="requested_by" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="noted_by" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="approved_by" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+    <Property Name="hrs_of_ot" Type="Int32" />
+  </EntityType>
+  <ComplexType Name="sp_export_excel_Result">
+    <Property Type="String" Name="department" Nullable="true" MaxLength="20" />
+    <Property Type="DateTime" Name="date_filed" Nullable="true" Precision="23" />
+    <Property Type="String" Name="jo_no" Nullable="true" />
+    <Property Type="String" Name="details" Nullable="true" />
+    <Property Type="String" Name="apc" Nullable="true" MaxLength="200" />
+    <Property Type="DateTime" Name="date_started" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="date_ended" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="hrs_mins" Nullable="true" />
+    <Property Type="String" Name="jo_status" Nullable="false" MaxLength="500" />
+  </ComplexType>
+  <EntityType Name="tbl_gantt_chart">
+    <Key>
+      <PropertyRef Name="gant_chart_id" />
+    </Key>
+    <Property Name="gant_chart_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="details_id" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="work_package" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+    <Property Name="branches" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+    <Property Name="functions" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="date_started" Type="DateTime" Precision="0" />
+    <Property Name="date_ended" Type="DateTime" Precision="0" />
+  </EntityType>
+</Schema>

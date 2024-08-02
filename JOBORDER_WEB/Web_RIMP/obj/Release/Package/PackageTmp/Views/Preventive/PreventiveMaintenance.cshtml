@@ -1,0 +1,413 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<Web_RIMP.Models.PreventiveModels>
+
+
+@{
+    var Count = 1;
+    var GraphCount = 0;
+    ViewBag.Title = "PreventiveMaintenance";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+}
+
+<script src="~/Content/js/chartjs/Chart.js"></script>
+<script src="~/Content/custom/Maintenance/PreventiveMaintenance.js"></script>
+
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">Preventive Maintenance</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div class="cards" style="width:40%;">
+    <div id="divHeader" class="custom-table">
+        <p id="tblLabel">Preventive Maintenance Graphical Report</p>
+    </div>
+    <div class="row">
+        <div class="col-7">
+            <h6 id="lblTitleHeader" style="color:white;text-align:right;">Every 10 Years</h6>
+        </div>
+        <div class="col">
+            <select class="form-control" style="width: 200px;">
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" id="dvDetails">
+            <canvas id="preventive-chart" height="160"></canvas>
+        </div>
+    </div>
+</div>
+<div class="cards" style="width:55%;float:right;">
+    <div id="divHeader">
+        <br /><br />
+    </div>
+    <div class="row">
+        <div class="col-7">
+            <button class="btn btn-danger" id="createBtn" data-toggle="modal" data-target=".modal-new-preventive"><i class="fa fa-pencil-square-o"></i> Create New Plan</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <div class="table-responsive" style="max-height:400px;overflow:hidden;">
+                        <table class="table table-striped table-dark table-hover table-responsive" id="tbl-preventive-summary" style="text-align:center;">
+                            <thead class="thead-dark">
+                                <tr id="tblTr">
+                                    <th>Year</th>
+                                    <th>Month</th>
+                                    <th>Completion</th>
+                                    <th>Status</th>
+                                    <th>View</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-preventive-summary">
+                                @foreach (var model in Model)
+                                {
+                                    var year = model.Year;
+                                    var month = model.PlannedMonth;
+                                    var percentage = model.Percentage;
+                                    var status = model.Status;
+                                    var actual = model.ActualPreventive;
+                                    var standard = model.StandardPreventive;
+
+                                    <tr>
+                                        <td>@year</td>
+                                        <td>
+                                            <label id="lbl-month-@GraphCount">@month</label>
+                                        </td>
+                                        <td>
+                                            @percentage
+
+                                            <label id="lbl-actual-@GraphCount" style="display:none;">@actual</label>
+                                            <label id="lbl-standard-@GraphCount" style="display:none;">@standard</label>
+                                        </td>
+                                        <td>@status</td>
+                                        <td><button class="btn btn-danger" onclick="getPlanDetails('@month','')"><i class="fa fa-pencil"></i></button></td>
+                                    </tr>
+                                    GraphCount++;
+
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <label id="lbl-count" style="display:none;">@GraphCount</label>
+
+            <div class="row">
+                <div class="col" style="color:white;">
+                    Showing @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                    out of @Model.PageCount pages
+                </div>
+                <div id="hwID" class="col-10" style="margin-top:-18px;">
+
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action("AllHardwareJO", new { page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+                     new AjaxOptions()
+                     {
+                         HttpMethod = "GET",
+                         UpdateTargetId = "hwID",
+                         OnBegin = "displayLoader",
+                     }))
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="cards" style="width:100%;" id="dvBody">
+    <div id="div-Plan">
+        <div id="divHeader">
+            <div class="row">
+                <div class="col">
+                    <p id="tblLabel">APC IT Equipments And Facilities Plan</p>
+                </div>
+                <div class="col-3">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <label id="tblLabel" style="float:right;">Month-Year:</label>
+                        </div>
+                        <div class="form-group col-4">
+                            <input type="text" class="form-control" id="txt-details-monthyr" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <button class="btn btn-info" type="button" onclick="printToHardCopy()">
+                        <i class="fa fa-print"></i>
+                    </button>
+                </div>
+                <div class="col-4">
+                    <div id="searchDiv">
+                        <div class="row">
+                            <div class="col">
+                                <div class="input-group" id="txtSearch">
+                                    <input type="text" class="form-control" placeholder="Search Preventive" id="txt-preventive-search">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-dark" type="button" id="btn-hw-search" onclick="preventiveSearch()">
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                        <button class="btn btn-info" type="button" onclick="reloadDetails()">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="table-responsive" style="max-height:500px;overflow:hidden;">
+                    <table class="table table-striped table-dark table-hover table-responsive" id="tbl-plan-details" style="text-align:center;">
+                        <thead class="thead-dark">
+                            <tr id="tblTr">
+                                <th>Computer Name</th>
+                                <th>Equipment</th>
+                                <th>Department</th>
+                                <th>In-Charge</th>
+                                <th>Status</th>
+                                <th>View Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-plan-details">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-new-preventive" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">Create New APC Preventive Maintenance</p>
+                    </div>
+                </div>
+                <div class="body-message" id="joInfo">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label id="tblLabel" style="float:right;">Preventive Months: </label>
+                                </div>
+                                <div class="form-group col">
+                                    <input type="text" id="txt-month" class="form-control" placeholder="Month" />
+                                    <small class="error-preventive-required" style="display:none;">* This field is required</small>
+                                </div>
+                                <div class="form-group col">
+                                    <input type="file" class="form-control" id="txt-pcnames" placeholder="Computer Names" />
+                                    <small class="error-preventive-required" style="display:none;">* This field is required</small>
+                                </div>
+                                <div class="form-group col">
+                                    <button class="btn btn-info" onclick="getAllPC()"><i class="fa fa-laptop fa-2x"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="table-responsive" style="max-height:400px;overflow:hidden;">
+                                <div class="card-body p-0 pb-3 text-center" id="tbloverlay">
+                                    <br />
+                                    <img src="~/Content/gif/loader7.gif" id="imgLoaderm" />
+                                </div>
+                                <table class="table table-striped table-dark table-hover table-responsive" id="tbl-new-preventive">
+                                    <thead class="thead-dark">
+                                        <tr id="tblTr">
+                                            <th>Computer Name</th>
+                                            <th>Equipment</th>
+                                            <th>Department</th>
+                                            <th>Owner</th>
+                                            <th>In-Charge</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tb-new-preventive">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="submitPreventive()"><i class="fa fa-save"></i> Submit</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Cancel</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-actual" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">RIMP'S PREVENTIVE MAINTENANCE FOR PC</p>
+                    </div>
+                </div>
+                <div class="body-message" id="joInfo">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-row">
+                                <div class="form-group col-5">
+                                    <label id="lbl-maintenance-id" style="display:none;"></label>
+                                    <label id="lblDetailsTitle">Date:</label>
+                                    <input type="text" class="w3-input" id="txt-actual-date" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+                                </div>
+                                <div class="form-group col">
+                                    <label id="lblDetailsTitle">In-charge:</label>
+                                    <input type="text" class="w3-input" id="txt-actual-incharge" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label id="lblDetailsTitle">Department:</label>
+                                    <input type="text" class="w3-input" id="txt-actual-department" readonly>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="lblDetailsTitle">Type:</label>
+                                    <input type="text" class="w3-input" id="txt-actual-type" readonly>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="lblDetailsTitle">Computer Name:</label>
+                                    <input type="text" class="w3-input" id="txt-actual-pcname" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label id="tblLabel">Diagnosis:</label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label id="tblLabel">Description of Service:</label>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="tblLabel">Notes:</label>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="tblLabel">Remarks:</label>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="tblLabel">Duration:</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var model in ViewBag.Diagnosis)
+                    {
+                        var Diagnosis = model.description;
+                        var Diagnosisid = model.services_id;
+                        <div class="row">
+                            <div class="col-lg">
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label id="lblDetailsHeader">@Diagnosis</label>
+                                        <label style="display:none;" id="lbl-services-id-@Count">@Diagnosisid</label>
+                                    </div>
+                                    <div class="form-group col">
+                                        <textarea class="form-control" id="txt-notes-@Count"></textarea>
+                                    </div>
+                                    <div class="form-group col">
+                                        <textarea class="form-control" id="txt-remarks-@Count"></textarea>
+                                    </div>
+                                    <div class="form-group col">
+                                        <textarea class="form-control" id="txt-duration-@Count"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        Count++;
+                    }
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <label id="tblLabel">Prepared By:</label>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="tblLabel">Checked By:</label>
+                                </div>
+                                <div class="form-group col">
+                                    <label id="tblLabel">Approved By:</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="form-row">
+                                <div class="form-group col">
+                                    <select class="form-control" id="drd-preparedby">
+                                        @foreach (var model in ViewBag.APC)
+                                        {
+                                            var empname = model.emp_name;
+                                            <option value="@empname">@empname</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col">
+                                    <select class="form-control" id="drd-checkedby">
+                                        @foreach (var model in ViewBag.APC)
+                                        {
+                                            var empname = model.emp_name;
+                                            <option value="@empname">@empname</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="form-group col">
+                                    <select class="form-control" id="drd-approvedby">
+                                        @foreach (var model in ViewBag.APC)
+                                        {
+                                            var empname = model.emp_name;
+                                            <option value="@empname">@empname</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <label id="lbl-diagnose-count" style="display:none;">@ViewBag.Diagnosis.Count</label>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="submitDiagnosis()"><i class="fa fa-save"></i> Submit</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Cancel</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

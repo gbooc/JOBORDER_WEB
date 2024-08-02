@@ -1,0 +1,433 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="JOModelStoreContainer" CdmEntityContainer="JOEntities">
+    <EntitySetMapping Name="sysdiagrams">
+      <EntityTypeMapping TypeName="JOModel.sysdiagram">
+        <MappingFragment StoreEntitySet="sysdiagrams">
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_apc_personnel">
+      <EntityTypeMapping TypeName="JOModel.tbl_apc_personnel">
+        <MappingFragment StoreEntitySet="tbl_apc_personnel">
+          <ScalarProperty Name="apc_id" ColumnName="apc_id" />
+          <ScalarProperty Name="emp_id" ColumnName="emp_id" />
+          <ScalarProperty Name="emp_name" ColumnName="emp_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_applications">
+      <EntityTypeMapping TypeName="JOModel.tbl_applications">
+        <MappingFragment StoreEntitySet="tbl_applications">
+          <ScalarProperty Name="app_id" ColumnName="app_id" />
+          <ScalarProperty Name="apc_id" ColumnName="apc_id" />
+          <ScalarProperty Name="code_number" ColumnName="code_number" />
+          <ScalarProperty Name="application_name" ColumnName="application_name" />
+          <ScalarProperty Name="user_department" ColumnName="user_department" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_category_type">
+      <EntityTypeMapping TypeName="JOModel.tbl_category_type">
+        <MappingFragment StoreEntitySet="tbl_category_type">
+          <ScalarProperty Name="type_id" ColumnName="type_id" />
+          <ScalarProperty Name="category_id" ColumnName="category_id" />
+          <ScalarProperty Name="code_number" ColumnName="code_number" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_joborder_category">
+      <EntityTypeMapping TypeName="JOModel.tbl_joborder_category">
+        <MappingFragment StoreEntitySet="tbl_joborder_category">
+          <ScalarProperty Name="category_id" ColumnName="category_id" />
+          <ScalarProperty Name="type" ColumnName="type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_joborder_details">
+      <EntityTypeMapping TypeName="JOModel.tbl_joborder_details">
+        <MappingFragment StoreEntitySet="tbl_joborder_details">
+          <ScalarProperty Name="has_scope" ColumnName="has_scope" />
+          <ScalarProperty Name="sw_gantt_chart" ColumnName="sw_gantt_chart" />
+          <ScalarProperty Name="sw_standard_time" ColumnName="sw_standard_time" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+          <ScalarProperty Name="details_id" ColumnName="details_id" />
+          <ScalarProperty Name="type_id" ColumnName="type_id" />
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="sw_codenumber" ColumnName="sw_codenumber" />
+          <ScalarProperty Name="date_started" ColumnName="date_started" />
+          <ScalarProperty Name="date_ended" ColumnName="date_ended" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="purpose" ColumnName="purpose" />
+          <ScalarProperty Name="diagnosis" ColumnName="diagnosis" />
+          <ScalarProperty Name="action_taken" ColumnName="action_taken" />
+          <ScalarProperty Name="apc_noted_by" ColumnName="apc_noted_by" />
+          <ScalarProperty Name="apc_approved_by" ColumnName="apc_approved_by" />
+          <ScalarProperty Name="progress_rate" ColumnName="progress_rate" />
+          <ScalarProperty Name="assignee" ColumnName="assignee" />
+          <ScalarProperty Name="remarks" ColumnName="remarks" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_priority">
+      <EntityTypeMapping TypeName="JOModel.tbl_priority">
+        <MappingFragment StoreEntitySet="tbl_priority">
+          <ScalarProperty Name="priority_id" ColumnName="priority_id" />
+          <ScalarProperty Name="priority_name" ColumnName="priority_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_status">
+      <EntityTypeMapping TypeName="JOModel.tbl_status">
+        <MappingFragment StoreEntitySet="tbl_status">
+          <ScalarProperty Name="status_id" ColumnName="status_id" />
+          <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_Employee">
+      <EntityTypeMapping TypeName="JOModel.vw_Employee">
+        <MappingFragment StoreEntitySet="vw_Employee">
+          <ScalarProperty Name="emp_no" ColumnName="emp_no" />
+          <ScalarProperty Name="emp_id" ColumnName="emp_id" />
+          <ScalarProperty Name="emp_name" ColumnName="emp_name" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="dept_name" ColumnName="dept_name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="vw_Managers">
+      <EntityTypeMapping TypeName="JOModel.vw_Managers">
+        <MappingFragment StoreEntitySet="vw_Managers">
+          <ScalarProperty Name="emp_id" ColumnName="emp_id" />
+          <ScalarProperty Name="emp_name" ColumnName="emp_name" />
+          <ScalarProperty Name="dept_id" ColumnName="dept_id" />
+          <ScalarProperty Name="position" ColumnName="position" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_alterdiagram" FunctionName="JOModel.Store.sp_alterdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_creatediagram" FunctionName="JOModel.Store.sp_creatediagram" />
+    <FunctionImportMapping FunctionImportName="sp_dropdiagram" FunctionName="JOModel.Store.sp_dropdiagram" />
+    <FunctionImportMapping FunctionImportName="sp_helpdiagramdefinition" FunctionName="JOModel.Store.sp_helpdiagramdefinition">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_helpdiagramdefinition_Result">
+          <ScalarProperty Name="version" ColumnName="version" />
+          <ScalarProperty Name="definition" ColumnName="definition" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_helpdiagrams" FunctionName="JOModel.Store.sp_helpdiagrams">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_helpdiagrams_Result">
+          <ScalarProperty Name="Database" ColumnName="Database" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="Owner" ColumnName="Owner" />
+          <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_joborder_classification" FunctionName="JOModel.Store.sp_joborder_classification">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_joborder_classification_Result">
+          <ScalarProperty Name="hw_type_id" ColumnName="hw_type_id" />
+          <ScalarProperty Name="hw_type_name" ColumnName="hw_type_name" />
+          <ScalarProperty Name="hw_type" ColumnName="hw_type" />
+          <ScalarProperty Name="hw_code_number" ColumnName="hw_code_number" />
+          <ScalarProperty Name="hw_details" ColumnName="hw_details" />
+          <ScalarProperty Name="hw_standard_time" ColumnName="hw_standard_time" />
+          <ScalarProperty Name="sw_code_number" ColumnName="sw_code_number" />
+          <ScalarProperty Name="sw_app_name" ColumnName="sw_app_name" />
+          <ScalarProperty Name="sw_user_dept" ColumnName="sw_user_dept" />
+          <ScalarProperty Name="sw_programmer" ColumnName="sw_programmer" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_joborder_details" FunctionName="JOModel.Store.sp_joborder_details">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_joborder_details_Result">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="category_id" ColumnName="category_id" />
+          <ScalarProperty Name="codenumber" ColumnName="codenumber" />
+          <ScalarProperty Name="jonumber" ColumnName="jonumber" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="purpose" ColumnName="purpose" />
+          <ScalarProperty Name="jo_type" ColumnName="jo_type" />
+          <ScalarProperty Name="jo_type_details" ColumnName="jo_type_details" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+          <ScalarProperty Name="jo_priority" ColumnName="jo_priority" />
+          <ScalarProperty Name="jo_status" ColumnName="jo_status" />
+          <ScalarProperty Name="jo_diagnosis" ColumnName="jo_diagnosis" />
+          <ScalarProperty Name="jo_action_taken" ColumnName="jo_action_taken" />
+          <ScalarProperty Name="jo_progress" ColumnName="jo_progress" />
+          <ScalarProperty Name="jo_remarks" ColumnName="jo_remarks" />
+          <ScalarProperty Name="dev_app_name" ColumnName="dev_app_name" />
+          <ScalarProperty Name="assignee" ColumnName="assignee" />
+          <ScalarProperty Name="datefiled" ColumnName="datefiled" />
+          <ScalarProperty Name="requestor" ColumnName="requestor" />
+          <ScalarProperty Name="req_approvedby" ColumnName="req_approvedby" />
+          <ScalarProperty Name="req_notedby" ColumnName="req_notedby" />
+          <ScalarProperty Name="date_started" ColumnName="date_started" />
+          <ScalarProperty Name="date_needed" ColumnName="date_needed" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+          <ScalarProperty Name="hrs_of_ot" ColumnName="hrs_of_ot" />
+          <ScalarProperty Name="hr_shift" ColumnName="hr_shift" />
+          <ScalarProperty Name="details_id" ColumnName="details_id" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_renamediagram" FunctionName="JOModel.Store.sp_renamediagram" />
+    <FunctionImportMapping FunctionImportName="sp_upgraddiagrams" FunctionName="JOModel.Store.sp_upgraddiagrams" />
+    <FunctionImportMapping FunctionImportName="sp_hardware_counts" FunctionName="JOModel.Store.sp_hardware_counts">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_hardware_counts_Result">
+          <ScalarProperty Name="hw_codenumber" ColumnName="hw_codenumber" />
+          <ScalarProperty Name="count_email" ColumnName="count_email" />
+          <ScalarProperty Name="count_tel" ColumnName="count_tel" />
+          <ScalarProperty Name="count_desktop" ColumnName="count_desktop" />
+          <ScalarProperty Name="count_network" ColumnName="count_network" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_software_count" FunctionName="JOModel.Store.sp_software_count">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_software_count_Result">
+          <ScalarProperty Name="sw_codenumber" ColumnName="sw_codenumber" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_developer_jo_summary" FunctionName="JOModel.Store.sp_developer_jo_summary">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_developer_jo_summary_Result">
+          <ScalarProperty Name="count_all_jo" ColumnName="count_all_jo" />
+          <ScalarProperty Name="count_requirements" ColumnName="count_requirements" />
+          <ScalarProperty Name="count_development" ColumnName="count_development" />
+          <ScalarProperty Name="count_testing" ColumnName="count_testing" />
+          <ScalarProperty Name="count_debugging" ColumnName="count_debugging" />
+          <ScalarProperty Name="count_orientation" ColumnName="count_orientation" />
+          <ScalarProperty Name="count_hw_today" ColumnName="count_hw_today" />
+          <ScalarProperty Name="count_hw_total" ColumnName="count_hw_total" />
+          <ScalarProperty Name="count_sw_today" ColumnName="count_sw_today" />
+          <ScalarProperty Name="count_sw_total" ColumnName="count_sw_total" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_all_apc_jo_count" FunctionName="JOModel.Store.sp_all_apc_jo_count">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_all_apc_jo_count_Result">
+          <ScalarProperty Name="dev" ColumnName="dev" />
+          <ScalarProperty Name="today_total" ColumnName="today_total" />
+          <ScalarProperty Name="overall_total" ColumnName="overall_total" />
+          <ScalarProperty Name="exceed_actual_time" ColumnName="exceed_actual_time" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="tbl_downtime_cause">
+      <EntityTypeMapping TypeName="JOModel.tbl_downtime_cause">
+        <MappingFragment StoreEntitySet="tbl_downtime_cause">
+          <ScalarProperty Name="hardware_description" ColumnName="hardware_description" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+          <ScalarProperty Name="downtime_cause_id" ColumnName="downtime_cause_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_downtime_type">
+      <EntityTypeMapping TypeName="JOModel.tbl_downtime_type">
+        <MappingFragment StoreEntitySet="tbl_downtime_type">
+          <ScalarProperty Name="downtime_type" ColumnName="downtime_type" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_network">
+      <EntityTypeMapping TypeName="JOModel.tbl_network">
+        <MappingFragment StoreEntitySet="tbl_network">
+          <ScalarProperty Name="location" ColumnName="location" />
+          <ScalarProperty Name="network_code_number" ColumnName="network_code_number" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+          <ScalarProperty Name="network_id" ColumnName="network_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_server">
+      <EntityTypeMapping TypeName="JOModel.tbl_server">
+        <MappingFragment StoreEntitySet="tbl_server">
+          <ScalarProperty Name="server_uptime" ColumnName="server_uptime" />
+          <ScalarProperty Name="server_name" ColumnName="server_name" />
+          <ScalarProperty Name="server_code_number" ColumnName="server_code_number" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+          <ScalarProperty Name="server_id" ColumnName="server_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="tbl_telephone">
+      <EntityTypeMapping TypeName="JOModel.tbl_telephone">
+        <MappingFragment StoreEntitySet="tbl_telephone">
+          <ScalarProperty Name="tel_location" ColumnName="tel_location" />
+          <ScalarProperty Name="tel_code_number" ColumnName="tel_code_number" />
+          <ScalarProperty Name="tel_name" ColumnName="tel_name" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+          <ScalarProperty Name="tel_id" ColumnName="tel_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_server_downtime_details" FunctionName="JOModel.Store.sp_server_downtime_details">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_server_downtime_details_Result">
+          <ScalarProperty Name="server_name" ColumnName="server_name" />
+          <ScalarProperty Name="datestarted" ColumnName="datestarted" />
+          <ScalarProperty Name="dateended" ColumnName="dateended" />
+          <ScalarProperty Name="dowtime_mins" ColumnName="dowtime_mins" />
+          <ScalarProperty Name="downtime_cause" ColumnName="downtime_cause" />
+          <ScalarProperty Name="downtime_cause_details" ColumnName="downtime_cause_details" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_network_downtime_details" FunctionName="JOModel.Store.sp_network_downtime_details">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_network_downtime_details_Result">
+          <ScalarProperty Name="network_code_number" ColumnName="network_code_number" />
+          <ScalarProperty Name="datestarted" ColumnName="datestarted" />
+          <ScalarProperty Name="dateended" ColumnName="dateended" />
+          <ScalarProperty Name="dowtime_mins" ColumnName="dowtime_mins" />
+          <ScalarProperty Name="downtime_cause" ColumnName="downtime_cause" />
+          <ScalarProperty Name="downtime_cause_details" ColumnName="downtime_cause_details" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="tbl_downtime">
+      <EntityTypeMapping TypeName="JOModel.tbl_downtime">
+        <MappingFragment StoreEntitySet="tbl_downtime">
+          <ScalarProperty Name="downtime_cause_details" ColumnName="downtime_cause_details" />
+          <ScalarProperty Name="downtime_cause_id" ColumnName="downtime_cause_id" />
+          <ScalarProperty Name="total_mins_of_downtime" ColumnName="total_mins_of_downtime" />
+          <ScalarProperty Name="dateended_of_downtime" ColumnName="dateended_of_downtime" />
+          <ScalarProperty Name="datestarted_of_downtime" ColumnName="datestarted_of_downtime" />
+          <ScalarProperty Name="code_number" ColumnName="code_number" />
+          <ScalarProperty Name="downtime_type_id" ColumnName="downtime_type_id" />
+          <ScalarProperty Name="downtime_id" ColumnName="downtime_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_tel_downtime_details" FunctionName="JOModel.Store.sp_tel_downtime_details">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_tel_downtime_details_Result">
+          <ScalarProperty Name="tel_code_number" ColumnName="tel_code_number" />
+          <ScalarProperty Name="datestarted" ColumnName="datestarted" />
+          <ScalarProperty Name="dateended" ColumnName="dateended" />
+          <ScalarProperty Name="dowtime_mins" ColumnName="dowtime_mins" />
+          <ScalarProperty Name="downtime_cause" ColumnName="downtime_cause" />
+          <ScalarProperty Name="downtime_cause_details" ColumnName="downtime_cause_details" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_hw_jo_monthly_report" FunctionName="JOModel.Store.sp_hw_jo_monthly_report">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_hw_jo_monthly_report_Result">
+          <ScalarProperty Name="hw_codenumber" ColumnName="hw_codenumber" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+          <ScalarProperty Name="year_min" ColumnName="year_min" />
+          <ScalarProperty Name="year_max" ColumnName="year_max" />
+          <ScalarProperty Name="jonum" ColumnName="jonum" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="datestarted" ColumnName="datestarted" />
+          <ScalarProperty Name="dateended" ColumnName="dateended" />
+          <ScalarProperty Name="assignee" ColumnName="assignee" />
+          <ScalarProperty Name="requested_by" ColumnName="requested_by" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_sw_jo_monthly_report" FunctionName="JOModel.Store.sp_sw_jo_monthly_report">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_sw_jo_monthly_report_Result">
+          <ScalarProperty Name="hw_codenumber" ColumnName="hw_codenumber" />
+          <ScalarProperty Name="standard_time" ColumnName="standard_time" />
+          <ScalarProperty Name="actual_time" ColumnName="actual_time" />
+          <ScalarProperty Name="date_ended" ColumnName="date_ended" />
+          <ScalarProperty Name="date_needed" ColumnName="date_needed" />
+          <ScalarProperty Name="year_min" ColumnName="year_min" />
+          <ScalarProperty Name="year_max" ColumnName="year_max" />
+          <ScalarProperty Name="jonum" ColumnName="jonum" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="assignee" ColumnName="assignee" />
+          <ScalarProperty Name="requested_by" ColumnName="requested_by" />
+          <ScalarProperty Name="datestarted" ColumnName="datestarted" />
+          <ScalarProperty Name="dateended" ColumnName="dateended" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="sp_get_my_jo" FunctionName="JOModel.Store.sp_get_my_jo">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_get_my_jo_Result">
+          <ScalarProperty Name="job_no" ColumnName="job_no" />
+          <ScalarProperty Name="app" ColumnName="app" />
+          <ScalarProperty Name="status" ColumnName="status" />
+          <ScalarProperty Name="assignee" ColumnName="assignee" />
+          <ScalarProperty Name="date_filed" ColumnName="date_filed" />
+          <ScalarProperty Name="date_needed" ColumnName="date_needed" />
+          <ScalarProperty Name="date_started" ColumnName="date_started" />
+          <ScalarProperty Name="date_ended" ColumnName="date_ended" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="tbl_joborder">
+      <EntityTypeMapping TypeName="JOModel.tbl_joborder">
+        <MappingFragment StoreEntitySet="tbl_joborder">
+          <ScalarProperty Name="hrs_of_ot" ColumnName="hrs_of_ot" />
+          <ScalarProperty Name="approved_by" ColumnName="approved_by" />
+          <ScalarProperty Name="noted_by" ColumnName="noted_by" />
+          <ScalarProperty Name="requested_by" ColumnName="requested_by" />
+          <ScalarProperty Name="shift_hrs" ColumnName="shift_hrs" />
+          <ScalarProperty Name="date_needed" ColumnName="date_needed" />
+          <ScalarProperty Name="date_filed" ColumnName="date_filed" />
+          <ScalarProperty Name="priority_id" ColumnName="priority_id" />
+          <ScalarProperty Name="job_no" ColumnName="job_no" />
+          <ScalarProperty Name="details_id" ColumnName="details_id" />
+          <ScalarProperty Name="jobno_id" ColumnName="jobno_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_export_excel" FunctionName="JOModel.Store.sp_export_excel">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="JOModel.sp_export_excel_Result">
+          <ScalarProperty Name="department" ColumnName="department" />
+          <ScalarProperty Name="date_filed" ColumnName="date_filed" />
+          <ScalarProperty Name="jo_no" ColumnName="jo_no" />
+          <ScalarProperty Name="details" ColumnName="details" />
+          <ScalarProperty Name="apc" ColumnName="apc" />
+          <ScalarProperty Name="date_started" ColumnName="date_started" />
+          <ScalarProperty Name="date_ended" ColumnName="date_ended" />
+          <ScalarProperty Name="hrs_mins" ColumnName="hrs_mins" />
+          <ScalarProperty Name="jo_status" ColumnName="jo_status" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <EntitySetMapping Name="tbl_gantt_chart">
+      <EntityTypeMapping TypeName="JOModel.tbl_gantt_chart">
+        <MappingFragment StoreEntitySet="tbl_gantt_chart">
+          <ScalarProperty Name="date_ended" ColumnName="date_ended" />
+          <ScalarProperty Name="date_started" ColumnName="date_started" />
+          <ScalarProperty Name="functions" ColumnName="functions" />
+          <ScalarProperty Name="branches" ColumnName="branches" />
+          <ScalarProperty Name="work_package" ColumnName="work_package" />
+          <ScalarProperty Name="details_id" ColumnName="details_id" />
+          <ScalarProperty Name="gant_chart_id" ColumnName="gant_chart_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="sp_get_sw_actual_standard_time" FunctionName="JOModel.Store.sp_get_sw_actual_standard_time" />
+  </EntityContainerMapping>
+</Mapping>

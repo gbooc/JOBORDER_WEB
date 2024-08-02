@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Maintenance";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+}
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-1">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">Maintenance</h3>
+            </div>
+            <div class="col">
+                <div class="btn-group" role="group" id="topNav">
+                    <button class="btn btn-dark" onclick="gotoAllHardware()">
+                        <i class="fa fa-paperclip fa-2x"></i>
+                        JobOrder
+                    </button>
+                    <button class="btn btn-danger" onclick="gotoAllSoftware()">
+                        <i class="fa fa-line-chart fa-2x"></i> KPI
+                    </button>
+                    <button class="btn btn-success" onclick="gotoAllSoftware()">
+                        <i class="fa fa-users fa-2x"></i> APC
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+
+

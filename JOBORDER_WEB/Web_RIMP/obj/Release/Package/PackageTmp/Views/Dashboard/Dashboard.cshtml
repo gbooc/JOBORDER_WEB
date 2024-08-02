@@ -1,0 +1,321 @@
+﻿@model Web_RIMP.Models.DashboardModel
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+    var FullName = Request.Cookies["Fullname"].Value.ToString();
+
+    var Completed = Model.PercentageCompleted + "%";
+    var Ongoing = Model.PercentageOngoing + "%";
+    var Unassigned = Model.PercentageUnassigned + "%";
+    var Rejected = Model.PercentageRejected + "%";
+}
+
+<link rel="stylesheet" href="~/Content/css/Dashboard.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/bootstrap-extended.min.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/style.min.css">
+<link rel="stylesheet" type="text/css" href="~/Content/css/colors.min.css">
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+
+
+
+
+<!--<div id="dvContainer">
+    <div class="row">
+        <div class="col-6">
+            <h4> WELCOME @FullName</h4>
+        </div>
+    </div>
+    <div class="card flex-fill">
+        <div class="card-body">
+            <h3 class="card-title"><b>Job Order Statistics</b></h3>
+            <div class="row">
+                <div class="col-md-4 col-4 text-center">
+                    <div class="stats-box mb-4">
+                        <h4>Total Job Order</h4> <h5 style="font-weight:600;">@Html.DisplayFor(Model => Model.Total)</h5>
+                    </div>
+                </div>
+                <div class="col-md-4 col-4 text-center">
+                    <div class="stats-box mb-4"><h4>Completed Job Order</h4> <h5 style="font-weight:600;">@Html.DisplayFor(Model => Model.Completed)</h5></div>
+                </div>
+                <div class="col-md-4 col-4 text-center">
+                    <div class="stats-box mb-4"><h4>Overdue Job Order</h4> <h5 style="font-weight:600;">@Html.DisplayFor(Model => Model.Overdue)</h5></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-8">
+                    <h5 class="card-title" style="font-weight:600;">Job Order Statistics</h5>
+                    <div class="progress mb-4">-->
+@* <div role="progressbar" aria-valuenow="@Html.DisplayFor(Model => Model.PercentageCompleted)" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-info" style="width: @Completed;">@Html.DisplayFor(Model => Model.PercentageCompleted)%</div>*@
+<!--<div role="progressbar" aria-valuenow="@Html.DisplayFor(Model => Model.PercentageOngoing)" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-success" style="width: @Ongoing">@Html.DisplayFor(Model => Model.PercentageOngoing)%</div>
+            <div role="progressbar" aria-valuenow="@Html.DisplayFor(Model => Model.PercentageUnassigned)" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-warning" style="width:@Unassigned;">@Html.DisplayFor(Model => Model.PercentageUnassigned)%</div>
+            <div role="progressbar" aria-valuenow="@Html.DisplayFor(Model => Model.PercentageRejected)" aria-valuemin="0" aria-valuemax="100" class="progress-bar bg-danger" style="width: @Rejected;">@Html.DisplayFor(Model => Model.PercentageRejected)%</div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-8">-->
+@*<p style="font-weight:600;font-size:15px;"><i class="fa fa-dot-circle-o text-info mr-2"></i>Completed JO <span class="float-right">@Html.DisplayFor(Model => Model.Completed)</span></p>*@
+<!--<p style="font-weight:600;font-size:15px;"><i class="fa fa-dot-circle-o text-success mr-2"></i>Ongoing JO <span class="float-right">@Html.DisplayFor(Model => Model.Ongoing)</span></p>
+                    <p style="font-weight:600;font-size:15px;"><i class="fa fa-dot-circle-o text-warning mr-2"></i>Unassigned JO <span class="float-right">@Html.DisplayFor(Model => Model.Unassigned)</span></p>
+                    <p style="font-weight:600;font-size:15px;"><i class="fa fa-dot-circle-o text-danger mr-2"></i>Rejected JO<span class="float-right">@Html.DisplayFor(Model => Model.Rejected)</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>-->
+<div id="dvContainer">
+    <div class="grey-bg container-fluid">
+        <section id="minimal-statistics">
+            <div class="row">
+                <div class="col-12 mt-3 mb-1">
+                    <h4 class="text-uppercase">JO Dashboard</h4>
+                    <p> cards.</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card" id="dvCompleted">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="icon-pencil primary font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>@Html.DisplayFor(Model => Model.Completed)</h3>
+                                        <span>Completed</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="fa fa-archive warning font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>@Html.DisplayFor(Model => Model.PercentageCompleted) %</h3>
+                                        <span>Completed Percentage</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="icon-graph success font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>@Html.DisplayFor(Model => Model.PercentageOngoing) %</h3>
+                                        <span>Ongoing Percentage</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                        <i class="icon-badge danger font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                        <h3>@Html.DisplayFor(Model => Model.PercentageUnassigned) %</h3>
+                                        <span>Percentage Unassigned</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
+                                        <h3 class="danger">@Html.DisplayFor(Model => Model.PercentageRejected) %</h3>
+                                        <span>Percentage Rejected</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="icon-rocket danger font-large-2 float-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
+                                        <h3 class="danger">@Html.DisplayFor(Model => Model.Ongoing)</h3>
+                                        <span>Ongoing</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="icon-anchor success font-large-2 float-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
+                                        <h3 class="darken-2">@Html.DisplayFor(Model => Model.Unassigned)</h3>
+                                        <span>Unassigned</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="icon-pie-chart darken-4 font-large-2 float-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-6 col-12">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="media-body text-left">
+                                        <h3 class="danger">@Html.DisplayFor(Model => Model.Rejected)</h3>
+                                        <span>Rejected</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="icon-ban danger font-large-2 float-right"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats-subtitle">
+            <div class="row">
+                <div class="col-12 mt-3 mb-1">
+                    <h4 class="text-uppercase">Job Order Counts</h4>
+                    <p>Statistics on minimal cards with Title &amp; Sub Title.</p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6 col-md-12"  style="background-image: linear-gradient(rgba(245, 78, 162,.7), rgba(255, 118, 118,.7));">
+                    <div class="card overflow-hidden">
+                        <div class="card-content">
+                            <div class="card-body cleartfix">
+                                <div class="media align-items-stretch">
+                                    <div class="align-self-center">
+                                        <i class="icon-pencil danger font-large-2 mr-2"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>Total JO</h4>
+                                        <span>Completed/Ongoing Job Orders</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <h1>@Html.DisplayFor(Model => Model.Total)</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-md-12"  style="background-image: linear-gradient(rgba(245, 78, 162,.7), rgba(255, 118, 118,.7));">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body cleartfix">
+                                <div class="media align-items-stretch">
+                                    <div class="align-self-center">
+                                        <i class="icon-speech warning font-large-2 mr-2"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>Completed JO</h4>
+                                        <span>On time / Due JO</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <h1>@Html.DisplayFor(Model => Model.Completed)</h1>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-6 col-md-12"  style="background-image: linear-gradient(rgba(245, 78, 162,.7), rgba(255, 118, 118,.7));">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body cleartfix">
+                                <div class="media align-items-stretch">
+                                    <div class="align-self-center">
+                                        <h1 class="mr-2">@Html.DisplayFor(Model => Model.Overdue)</h1>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>Over Due JO</h4>
+                                        <span>All Due JO</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="fa fa-balance-scale danger font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-md-12"  style="background-image: linear-gradient(rgba(245, 78, 162,.7), rgba(255, 118, 118,.7));">
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="card-body cleartfix">
+                                <div class="media align-items-stretch">
+                                    <div class="align-self-center">
+                                        <h1 class="mr-2">$0,000.00</h1>
+                                    </div>
+                                    <div class="media-body">
+                                        <h4>Total Cost</h4>
+                                        <span>Monthly Cost</span>
+                                    </div>
+                                    <div class="align-self-center">
+                                        <i class="icon-wallet darken-4 font-large-2"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

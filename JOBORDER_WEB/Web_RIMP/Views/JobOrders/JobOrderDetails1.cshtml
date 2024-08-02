@@ -1,0 +1,932 @@
+﻿@model Web_RIMP.Models.JobOrderDetailsModel
+
+@{
+    ViewBag.Title = "JobOrderDetails";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var Department = Request.Cookies["Department"].Value.ToString();
+
+    var isApproved = "";
+    var count = 1;
+    var AllocationCount = 1;
+
+    var MaxDate = "";
+    string ProgressWidth = Model.ProgressRate + "%";
+
+    string Barcode = Model.JobNumber + ".png";
+
+}
+
+<script src="~/Content/js/jspdf.debug.js"></script>
+
+<link rel="stylesheet" href="~/Content/css/JobOrderDetails.css">
+<script src="~/Content/custom/JobOrders/JobOrderDetails.js"></script>
+
+<link href='~/Content/calendar/bootstrap/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/core/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/daygrid/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/timegrid/main.css' rel='stylesheet' />
+<link href='~/Content/calendar/list/main.css' rel='stylesheet' />
+
+
+<script src='~/Content/calendar/core/main.js'></script>
+<script src='~/Content/calendar/interaction/main.js'></script>
+<script src='~/Content/calendar/daygrid/main.js'></script>
+<script src='~/Content/calendar/timegrid/main.js'></script>
+<script src='~/Content/calendar/list/main.js'></script>
+<script src='~/Content/calendar/moment/main.js'></script>
+
+
+<script type="text/javascript" src="~/Content/js/datetimepicker/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/js/datetimepicker/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="~/Content/js/datetimepicker/tempusdominus-bootstrap-4.min.css" />
+
+@* -------- Gant Chart ------*@
+<div style="display:none;">
+    <label id="lblEventCount">@count</label>
+    <label id="user-login">@ViewBag.UserLogin</label>
+    <label id="user-dept">@ViewBag.UserDept</label>
+</div>
+@*-------------------------------*@
+<input type="text" id="txt-dateassigned" value="@Model.DateAssigned" style="display:none;" />
+<input type="hidden" value="@Model.JoID" id="txtDetailsID" />
+<input type="hidden" value="@Model.JODetailsID" id="txt-details-id" />
+<div class="page-header row no-gutters py-4" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">Job Order Details</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<page size="A3" layout="landscape" style="margin-top: 50px;">
+    <div class="row">
+        <div class="col-4">
+            <div id="divHeader" class="custom-table" style="width:400px;margin-top:20px;">
+                <div>
+                    <p id="tblLabel">Update JobOrder</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="btn-group" role="group">
+                <button class="btn btn-outline-dark" data-toggle="modal" data-target=".modal-cancel-jo" style="margin-top:20px;box-shadow: 1px 1px 3px 0px #888888;">
+                    <i class="fa fa-remove"> Cancel Job Order</i>
+                </button>
+                <button class="btn btn-outline-dark" onclick="printJobOrder()" style="margin-top:20px;box-shadow: 1px 1px 3px 0px #888888;">
+                    <i class="fa fa-print"> Print Job Order</i>
+                </button>
+                <button class="btn btn-outline-dark" onclick="reprintJobOrder()" style="margin-top:20px;box-shadow: 1px 1px 3px 0px #888888;">
+                    <i class="fa fa-adjust"> Re-print JobOrder</i>
+                </button>
+                <input type="file" id="wrdScopeId" style="display:none;" accept="application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+                <button class="btn btn-outline-dark" id="btnScope" data-toggle="tooltip" data-placement="top" title="Scope" onclick="joScope()" style="margin-top:20px;box-shadow: 1px 1px 3px 0px #888888;">
+                    <i class="fa fa-file-word-o"></i> Add Scope
+                </button>
+                <button class="btn btn-outline-dark" id="btnGanttChart" data-toggle="tooltip" data-placement="top" title="Gantt Chart" onclick="shoModalGanttChart()" style="margin-top:20px;box-shadow: 1px 1px 3px 0px #888888;">
+                    <i class="fa fa-calendar-plus-o"></i> Gantt Chart
+                </button>
+            </div>
+        </div>
+        @if (Model.IsDue == 1)
+        {
+        <div class="col-2">
+            <u style="color:red;font-size:35px;font-weight:bolder;font-family:'Sitka Banner';font-style:italic;"> <i class="fa fa-bullhorn"></i> JO IS DUE</u>
+        </div>
+        }
+    </div>
+    <div class="row">
+        <div class="col">
+            <p id="lblDetailsHeader" style="margin-left:10px;"><u>Job Order Information (Requestor)</u></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg" style="width:90%; margin-left: 25px;margin-right:25px;">
+            <div class="form-row">
+                <div class="form-group col">
+                    <label id="lblDetailsTitle">Job Number:</label>
+                    <input type="text" class="w3-input" value="@Model.JobNumber" id="jonumberId" readonly>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Code Number:</label>
+                    <input type="text" value="@Model.CodeNumber" class="w3-input" id="codenumberId" readonly>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Requestor:</label>
+                    <input type="text" value="@Model.Requestor" class="w3-input" id="requestorId" readonly>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Department:</label>
+                    <input type="text" class="w3-input" value="@Model.Department" id="departmentId" readonly>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Local #:</label>
+                    <input type="text" class="w3-input" value="@Model.RequestorLocal" id="txtlocalnum" readonly>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-2">
+                    <label id="lblDetailsTitle">Date Filed:</label>
+                    <input type="text" class="w3-input" value="@Model.Datefiled" id="datefiledId" readonly>
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label id="lblDetailsTitle">Request Type:</label>
+                    <input type="hidden" id="txtCategory" value="@Model.JoType" />
+                    <select class="w3-input" id="categoryId" onchange="changeCategory()">
+                        <option value="@Model.JoTypeDetailsID">@Model.JoType</option>
+                        @foreach (var type in ViewBag.JOType)
+                        {
+                            // if ((type.type != Model.JoType && type.type != "Software") && Model.JoType != "Software")
+                            // {
+                            <option value="@type.category_id">@type.type</option>
+                            // }
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label id="lblDetailsTitle">Type Details:</label>
+                    <input type="hidden" value="@Model.JoTypeDetails" id="txtcategoryid" />
+                    <select class="w3-input" id="categorytypeId" onchange="changeSubCategory()">
+                        <option value="@Model.JoTypeDetailsID">@Model.JoTypeDetails</option>
+                    </select>
+                </div>
+                @*<div class="form-group col-md-3">
+                        <label id="lblDetailsTitle">Priority:</label>
+                        <select class="w3-input" id="priorityID" onchange="updateJobOrder(this,'priority')">
+                            <option value="@Model.Priority">@Model.Priority</option>
+                            @foreach (var priority in ViewBag.Priority)
+                            {
+                                if (priority.priority_name != Model.Priority)
+                                {
+                                    <option value="@priority.priority_id">@priority.priority_name</option>
+                                }
+
+                            }
+                        </select>
+                    </div>*@
+                <div class="form-group col-md-3">
+                    <label id="lblDetailsTitle">Cost Center:</label>
+                    <input type="text" value="@Model.JO_Costcenter" id="txtcostcenter" class="w3-input" readonly />
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Date Closed:</label>
+                    <input type="text" class="w3-input" id="txt-dateClosed" value="@Model.DateConfirmed" readonly />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md">
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label id="lblDetailsTitle">Request Details:</label>
+                            <textarea class="w3-input" onchange="updateJobOrder(this,'details')" id="workdetailsId" rows="5">@Model.WorkDetails</textarea>
+                            <label id="display_count" style="font-family:Verdana;font-weight:400;"></label>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label id="lblDetailsTitle">Request Purpose:</label>
+                            <textarea class="w3-input" onchange="updateJobOrder(this,'purpose')" id="purposeId" rows="5">@Model.WorkPurpose</textarea>
+                            <label id="display_count-p" style="font-family:Verdana;font-weight:400;"></label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label id="lblDetailsTitle">Noted By:</label>
+                            <select class="w3-input" id="notedbyId" onchange="updateJobOrder(this,'notedBy')">
+                                <option value="@Model.NotedBy">@Model.NotedBy</option>
+                                @foreach (var mng in ViewBag.RequestorManager)
+                                {
+                                    if (mng.Manager != Model.NotedBy)
+                                    {
+                                        <option value="@mng.Manager">@mng.Manager</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label id="lblDetailsTitle">Approved By:</label>
+                            <select class="w3-input" id="approved-by-id" onchange="updateJobOrder(this,'approvedBy')">
+                                <option value="@Model.ApprovedBy" id="approvedbyId">@Model.ApprovedBy</option>
+                                @foreach (var mng in ViewBag.RequestorManager)
+                                {
+                                    if (mng.Manager != Model.ApprovedBy)
+                                    {
+                                        <option value="@mng.Manager">@mng.Manager</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="divHeader" class="custom-table" style="width:500px;margin-top:20px;">
+                <div>
+                    <p id="tblLabel">Job Order Information (Requestor)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg" style="margin-left: 15px;margin-right:15px;">
+            <div class="row">
+                <div class="col">
+                    <div class="row">
+                        <div class="form-group col-2">
+                            <label id="lblDetailsTitle">In-Charge:</label>
+                            @*<select class="w3-input" onchange="updateJobOrder(this,'assignee')" id="slctIncharge">
+                                    <option value="@Model.Assignee">@Model.Assignee</option>
+                                    @foreach (var assignee in ViewBag.Assignee)
+                                    {
+                                        if (Model.Assignee != assignee.emp_name)
+                                        {
+                                            <option value="@assignee.emp_name">@assignee.emp_name</option>
+                                        }
+                                    }
+                                </select>*@
+                            <input type="hidden" id="txt-assignee" value="@Model.Assignee" />
+                            <button class="btn btn-danger" onclick="displayAssignees()">View Assignee(s)</button>
+                        </div>
+                        <div class="form-group col">
+                            <label id="lblDetailsTitle">Status:</label>
+                            <select class="w3-input" onchange="showConfirmationGC(this,'status')" id="cbStatusID">
+                                @if (Model.Status == "Closed")
+                                {
+                                    <option value="@Model.Status">@Model.Status</option>
+                                }
+                                @foreach (var status in ViewBag.Status)
+                                {
+                                    if (Model.Status != status.Status)
+                                    {
+                                        <option value="@status.StatusId">@status.Status</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@status.StatusId">@status.Status</option>
+
+                                    }
+                                }
+                                <option value="6">Closed</option>
+                            </select>
+                            <small id="txt-error-datestarted" style="display:none;color:red;">* Please add time allocation, before closing JO.</small>
+                        </div>
+                        <div class="form-group col-5">
+                            <label id="lblDetailsTitle">Recipient:</label>
+                            <input type="text" class="w3-input" id="txt-recipient" />
+                        </div>
+                        <div class="form-group col-3">
+                            <button class="btn btn-dark" onclick="addRecipeint()" style="margin-top:32px;"><i class="fa fa-address-book-o"></i> Add Recipient</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg" style="margin-left: 15px;margin-right:15px;">
+            <div class="row">
+                <div class="col">
+                    <label id="lblDetailsTitle">Add Progress:</label>
+                    <div class="input-group number-spinner">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" data-dir="dwn"><span class="fa fa-minus"></span></button>
+                        </span>
+                        <input type="text" class="form-control text-center" onchange="updateJobOrder(this,'progress')" value="@Model.ProgressRate">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" data-dir="up"><span class="fa fa-plus"></span></button>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="col">
+                    <label id="lblDetailsTitle">Progress Bar:</label>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="@Model.ProgressRate"
+                             aria-valuemin="0" aria-valuemax="100" style="width:@ProgressWidth">
+                            <label id="lbl-progress">@ProgressWidth</label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <label id="lblDetailsTitle">Priority:</label>
+                    <select class="w3-input" id="priorityID" onchange="updateJobOrder(this,'priority')">
+                        <option value="@Model.Priority">@Model.Priority</option>
+                        @foreach (var priority in ViewBag.Priority)
+                        {
+                            if (priority.priority_name != Model.Priority)
+                            {
+                                <option value="@priority.priority_id">@priority.priority_name</option>
+                            }
+
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        @*<div class="form-group col-md">
+                <label id="lblDetailsTitle">Remarks:</label>
+                <textarea class="form-control" onchange="updateJobOrder(this,'remarks')" id="txt-remarks">@Model.Remarks</textarea>
+                <small id="errorRemarks" class="text-danger" style="display:none;">
+                    <i class="fa fa-warning"></i> Port cannot be empty.
+                </small>
+            </div>*@
+        <div class="col-lg" style="margin-left: 15px;margin-right:15px;">
+            <div class="row">
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">System Type:</label>
+                    <select class="w3-input" id="cb-system-type" onchange="updateJobOrder(this,'SystemType')">
+                        <option>@Model.SystemType</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="Web">Web</option>
+                    </select>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">System Icon:</label>
+                    <input type="file" accept="image/*" class="w3-input" id="img-icon" onchange="saveimage(event)" />
+                    <small id="errorIcon" class="text-danger" style="display:none;">
+                        <i class="fa fa-warning"></i> Port cannot be empty.
+                    </small>
+                </div>
+                <div class="form-group col-md-2">
+                    <label id="lblDetailsTitle">Icon Preview:</label>
+                    <img id="imagePreview" src="@Url.Content(Model.Icon)" width="100" height="80" />
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">URL:</label>
+                    <textarea class="w3-input" onchange="updateJobOrder(this,'Port')" id="txt-port" disabled>@Model.Port</textarea>
+                    <small id="errorPort" class="text-danger" style="display:none;">
+                        <i class="fa fa-warning"></i> URL cannot be empty.
+                    </small>
+                </div>
+            </div>
+            <div class="form-row" style="margin-left:15px;margin-right:5px;">
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Diagnosis:</label>
+                    <textarea class="form-control" onchange="updateJobOrder(this,'diagnosis')" id="txtDiagnosis" rows="5">@Model.Diagnosis</textarea>
+                    <small id="errorDiagnosis" class="text-danger" style="display:none;">
+                        <i class="fa fa-warning"></i> Diagnosis cannot be empty.
+                    </small>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Action Taken:</label>
+                    <textarea class="form-control" onchange="updateJobOrder(this,'actiontaken')" id="txtActionTaken" rows="5">@Model.ActionTaken</textarea>
+                    <small id="errorActionTaken" class="text-danger" style="display:none;">
+                        <i class="fa fa-warning"></i> Action Taken cannot be empty.
+                    </small>
+                </div>
+                <div class="form-group col-md">
+                    <label id="lblDetailsTitle">Reason Of Delay:</label>
+                    <textarea class="form-control" onchange="updateJobOrder(this,'delay')" id="txtDelay" rows="5">@Model.ReasonOfDelay</textarea>
+                    <small id="errorActionTaken" class="text-danger" style="display:none;">
+                        <i class="fa fa-warning"></i> Action Taken cannot be empty.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col-1">
+                    <label id="lblDetailsTitle">Noted By:</label>
+                </div>
+                <div class="col">
+                    @if (Model.Status != "For Approval")
+                    {
+                        isApproved = "BALUNDO, ALFRED C.";
+                    }
+                    <input type="text" class="w3-input" value="@isApproved" id="apc_notedBy" readonly />
+                </div>
+                <div class="col-1">
+                    <label id="lblDetailsTitle">Approved By:</label>
+                </div>
+                <div class="col">
+                    @if (Model.Status != "For Approval")
+                    {
+                        isApproved = "BALUNDO, ALFRED C.";
+                    }
+                    <input type="text" class="w3-input" value="@isApproved" id="apc_approvedBy" readonly />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div id="divHeader" class="custom-table" style="width:500px;margin-top:20px;">
+                <div>
+                    <p id="tblLabel">JO Updates:</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <ul class="nav nav-pills nav-pills-primary nav-justified">
+                <li class="nav-item">
+                    <a href="javascript:void();" data-target="#progress" data-toggle="pill" class="nav-link active show">
+                        <span class="hidden-xs" style="color:black;"><label class="lblTitle"><i class="fa fa-cogs"></i> Progress</label></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="javascript:void();" data-target="#modifications" data-toggle="pill" class="nav-link">
+                        <span class="hidden-xs" style="color: black;"><label class="lblTitle"><i class="fa fa-paperclip"></i> Modifications</label></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content p-3">
+                <div class="tab-pane active show" id="progress">
+                    <div class="form-row" style="margin-left:15px;margin-right:5px;margin-top:25px;">
+                        <div class="form-group col-md-3">
+                            <label id="lblDetailsTitle">Date Target:</label>
+                            <div class="form-group">
+                                <div class="input-group date">
+                                    <input type="text" class="w3-input" id="txt-datetargetId" value="@Model.DateTarget" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label id="lblDetailsTitle">Date Started:</label>
+                            <div class="form-group">
+                                <div class="input-group date">
+                                    <input type="text" class="w3-input"" id="txt-datestartedId" value="@Model.DateStarted" readonly />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label id="lblDetailsTitle">Date Ended:</label>
+                            <div class="form-group">
+                                <div class="input-group date">
+                                    <input type="text" class="w3-input"" id="txt-dateendedId" value="@Model.DateEnded" onchange="overrideDateEnded()" disabled />
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-md">
+                            <label id="lblDetailsTitle">Standard Time(Mins):</label>
+                            <input type="text" class="w3-input" value="@Model.StandardTime" id="standardtime" readonly />
+                        </div>
+                        <div class="form-group col-md">
+                            <label id="lblDetailsTitle">Actual Time(Mins):</label>
+                            <input type="text" class="w3-input" id="actualTimeID" value="@Model.ActualTime" onchange="updateJobOrder(this,'actualtime')" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                        <div class="col-2">
+                            @if (Department == "ASIA PACIFIC CENTER" || Department == "ROCOCO")
+                            {
+                                <button class="btn btn-danger" onclick="addTimeAllocation()"><i class="fa fa-calendar-minus-o"></i> Add Time Allocation</button>
+                            }
+                        </div>
+                    </div><br />
+                    <div class="row">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-responsive-md" id="tbl-time-allocation">
+                                    <thead>
+                                        <tr id="tblTr">
+                                            <th>Date</th>
+                                            <th>Day</th>
+                                            <th style="width: 13%;">Time(Hrs)</th>
+                                            <th style="width: 50%;">Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tb-time-allocation">
+                                        @foreach (var model in ViewBag.JOProgress)
+                                        {
+                                            var date = model.Date;
+                                            var day = model.Day;
+                                            var mins = model.Mins / 60;
+                                            var description = model.Description;
+                                            var AllocationID = model.ID;
+                                            var RemarksID = "txt-remarks" + AllocationCount;
+                                            var TimeID = "txt-time" + AllocationCount;
+                                            <tr>
+                                                <td>@date</td>
+                                                <td>@day</td>
+                                                <td style="width: 13%;">
+                                                    @if (Department == "ASIA PACIFIC CENTER" || Department == "ROCOCO")
+                                                    {
+                                                        <input type="text" class="form-control" id="@TimeID" value="@mins" onchange="updateTimeAllocation(@AllocationID,this,'Time','@TimeID')" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="text" class="form-control" readonly />
+                                                    }
+                                                </td>
+                                                <td style="width: 50%;">
+                                                    @if (Department == "ASIA PACIFIC CENTER" || Department == "ROCOCO")
+                                                    {
+                                                        <textarea class="form-control" id="@RemarksID" onchange="updateTimeAllocation(@AllocationID, this, 'Remarks', '@RemarksID')"> @description </textarea>
+                                                    }
+                                                    else
+                                                    {
+                                                        <textarea class="form-control" readonly>@description</textarea>
+                                                    }
+                                                </td>
+                                            </tr>
+                                            DateTime tmpDate = Convert.ToDateTime(date);
+                                            MaxDate = tmpDate.AddDays(1).ToShortDateString();
+
+                                            AllocationCount++;
+                                        }
+                                    </tbody>
+                                </table>
+                                <label id="lbl-max-allocation" style="display:none;">@MaxDate</label>
+                                <label style="display:none;" id="lbl-allocation-days">@AllocationCount</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="modifications">
+                    <div class="row">
+                        <div class="col">test</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</page>
+
+
+
+@*-------------------- M O D A L ------------------------------------*@
+<div class="modal fade bs-example-modal-new3" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header" id="mdHeaderDv">
+                <div id="mdTxtHeaderDv">
+                    <font id="mdlheader1">Existing Scope</font>
+                    <font id="mdlheader2">Job Order</font>
+                </div>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+
+                    <div class="form-row">
+                        <div>
+                            <p id="lblTitleHeader" style="font-size:20px;">
+                                You already uploaded scope,please choose action.
+                            </p>
+                            <img src="~/Content/img/msword3.jpg" style="width: 60px;" />
+                            <p><u>@Model.JobNumber.ToString()</u><u>.docx</u></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+                <button class="btn btn-danger" onclick="updateJoScope()">
+                    <i class="fa fa-pencil"></i>
+                    Replace
+                </button>
+                <button class="btn btn-primary" onclick="downloadWord()">
+                    <i class="fa fa-download"></i>
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*---------- GANTT CHART -----------*@
+<div class="modal fade bs-example-modal-new4" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="divHeader" class="custom-table">
+                    <div style="display:inline-block;width:100%;">
+                        <p id="tblLabel" style="display:inline-block;">Add Gantt Chart</p>
+                        <a href="#" class="btn btn-dark" id="btn-generate-report" onclick="generateGanttChart()" style="float:right;margin-top:5px;margin-right:5px;">
+                            <i class="fa fa-database"></i> Generate Report
+                        </a>
+                    </div>
+                </div>
+                <div class="body-message">
+                    <br />
+                    <div class="row" style="width:100%;min-height:200px;">
+                        <div class="col">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-new5" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">Add Event</p>
+                    </div>
+                </div>
+                <div class="body-message">
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-xs-4" for="title">Work Package / Status</label>
+                            <input type="text" class="form-control" id="dd-work-package" readonly />
+                        </div>
+                        <div class="col">
+                            <label class="col-xs-4" for="title">Task No.</label>
+                            <select class="form-control" id="dd-task-no" onclick="getBranches()">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-xs-4" for="title">Branches</label>
+                            <input type="text" class="form-control" id="txt-branches" disabled />
+                        </div>
+                        <div class="col">
+                            <label class="col-xs-4" for="title">Event Title:</label>
+                            <input type="text" name="title" id="txtganttchartTitle" class="w3-input" disabled />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-xs-4" for="starts-at">Starts at:</label>
+                            <input type="text" name="starts_at" id="txtganttchartStart" class="w3-input" />
+                        </div>
+                        <div class="col">
+                            <label class="col-xs-4" for="starts-at">Ends at:</label>
+                            <input type="text" name="ends_at" id="txtganttchartEnd" class="w3-input" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" data-dismiss="modal"><i class="fa fa-times-rectangle-o"></i> Close</button>
+                        <button type="button" class="btn btn-primary" id="save-event" onclick="saveEvent('All')"><i class="fa fa-save"></i> Save changes</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal-status-confirmation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">Status Update</p>
+                    </div>
+                </div>
+                <div class="body-message" id="joInfo">
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-sm-11" for="title">
+                                Please make sure to completely add gantt Chart.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-dark" onclick="reloadPage()"><i class="fa fa-times-rectangle-o"></i> Close</button>
+                        <button type="button" class="btn btn-primary" id="save-event" onclick="updateJODevelopment()"><i class="fa fa-save"></i> Save Status</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade modal-cancel-jo" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">Delete Job Order</p>
+                    </div>
+                </div>
+                <div class="body-message" id="joInfo">
+                    <div class="row">
+                        <div class="col">
+                            <label class="col-sm-11" for="title">
+                                <i class="fa fa-trash-o fa-3x"></i> Are you sure to delete this JobOrder?
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="cancelJobOrder()"><i class="fa fa-check-square"></i> Yes</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> No</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade modal-time-allocation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div id="divHeader" class="custom-table">
+                    <div>
+                        <p id="tblLabel">JO Allocated Time</p>
+                    </div>
+                </div>
+                <div class="body-message" id="joInfo" style="min-height:600px;">
+                    <div class="form-row">
+                        <div class="form-group col-md-2">
+                            <label id="lblDetailsTitle" style="color:white;">Date Started: </label>
+                        </div>
+                        <div class="form-group col-md">
+                            <div class="form-group">
+                                <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                    <input type="text" class="form-control" id="datestartedId" data-target="#datetimepicker1" data-toggle="datetimepicker" data-placement="bottom" data-original-title="" disabled />
+                                </div>
+                                <small style="display:none;color:white;" id="error-datestarted">*Invalid date range!</small>
+                                <p id="errorTimeAllocated" class="text-danger" style="display:none;">
+                                    <i class="fa fa-warning"></i> Please add exact date started and date ended.
+                                </p>
+                            </div>
+
+                            <script type="text/javascript">
+                                    $(function () {
+                                        $('#datestartedId').datetimepicker({
+                                            defaultDate: "@Model.DateStarted",
+                                         //  format: 'YYYY-MM-DD HH:mm:ss'
+                                        });
+
+                                        $("#datetimepicker1").on("change.datetimepicker", function () {
+                                            changeDateStarted();
+                                        });
+                                    });
+                            </script>
+                        </div>
+                        <div class="form-group col-md-2">
+                            <label id="lblDetailsTitle" style="color:white;">Date Ended: </label>
+                        </div>
+                        <div class="form-group col-md">
+                            <div class="form-group">
+                                <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                                    <input type="text" class="form-control" id="dateendedId" data-target="#datetimepicker2" data-toggle="datetimepicker" data-placement="bottom" data-original-title="" />
+                                </div>
+                                <small style="display:none;color:red;" id="error-dateended">*Invalid date range.</small>
+                            </div>
+                            <script type="text/javascript">
+                                    $(function () {
+                                        $('#dateendedId').datetimepicker({
+                                            defaultDate: "@Model.DateEnded",
+                                           //format: 'YYYY-MM-DD HH:mm:ss',
+                                            Default: false
+                                        });
+                                        $("#datetimepicker2").on("change.datetimepicker", function () {
+                                            changeDateEnded();
+                                        });
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <table class="table table-striped table-hover table-responsive-md table-borderless table-dark" style="text-align:center;" id="tbl-create-allocation">
+                                <thead>
+                                    <tr id="tblTr">
+                                        <th>Date</th>
+                                        <th>Day</th>
+                                        <th style="width: 30%;">Allocated Time(Hrs)</th>
+                                        <th>Remarks</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tb-create-allocation">
+                                </tbody>
+                            </table>
+                            <div class="form-row">
+                                <div class="form-group col-md-3">
+                                    <label id="lblDetailsTitle" style="color:white;">Actual Time: </label>
+                                </div>
+                                <div class="form-group col-md">
+                                    <input type="text" class="form-control" id="txt-total-mins" value="@Model.ActualTime" readonly />
+                                    <small style="display:none;" id="lbl-actualtime-error"><i class="fa fa-warning"></i> Actual time cannot be lesser than or equal to 0</small>
+                                </div>
+                                <div class="form-group col-md-3" id="dv-actual-time" style="display:none;">
+                                    <button class="btn btn-info" onclick="computeMinutes()"><i class="fa fa-calculator"></i> Calculate</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" onclick="submitAllocatedTime()"><i class="fa fa-check-square"></i> Submit</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> Cancel</button>
+                    </div>
+                    <!-- Modal Content: ends -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade md-assignees" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header" id="mdHeaderDv">
+                <div id="mdTxtHeaderDv">
+                    <font id="mdlheader1">Assignees</font>
+                    <font id="mdlheader2">Job Order</font>
+                </div>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div class="row">
+                        <div class="col">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover table-responsive-md table-borderless table-dark" id="tbl-all-assignees" style="text-align:center;">
+                                    <thead>
+                                        <tr id="tblTr">
+                                            <th></th>
+                                            <th>Assignee</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tb-all-assignees">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+            </div>
+        </div>
+    </div>
+</div>
+
+@*---------------------- E N D ------------------------------------------------------*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#txt-recipient").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchEmail", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item, value: item,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+            });
+    })
+</script>

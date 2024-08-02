@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="JOModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="tbl_allocated_time">
+    <Key>
+      <PropertyRef Name="at_id" />
+    </Key>
+    <Property Name="at_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="int" />
+    <Property Name="date" Type="date" />
+    <Property Name="day" Type="varchar" MaxLength="200" />
+    <Property Name="mins" Type="int" />
+    <Property Name="work_description" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tbl_apc_personnel">
+    <Key>
+      <PropertyRef Name="apc_id" />
+    </Key>
+    <Property Name="apc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="500" />
+    <Property Name="emp_name" Type="varchar" MaxLength="200" />
+    <Property Name="tel_num" Type="varchar" MaxLength="50" />
+    <Property Name="status" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tbl_applications">
+    <Key>
+      <PropertyRef Name="app_id" />
+    </Key>
+    <Property Name="app_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="apc_id" Type="int" />
+    <Property Name="code_number" Type="varchar(max)" />
+    <Property Name="application_name" Type="varchar(max)" />
+    <Property Name="user_department" Type="varchar" MaxLength="50" />
+    <Property Name="app_type" Type="varchar" MaxLength="1000" />
+    <Property Name="web_link" Type="varchar" MaxLength="1000" />
+    <Property Name="icon_path" Type="varchar" MaxLength="1000" />
+    <Property Name="is_active" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tbl_category_type">
+    <Key>
+      <PropertyRef Name="type_id" />
+    </Key>
+    <Property Name="type_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="category_id" Type="int" />
+    <Property Name="code_number" Type="varchar(max)" />
+    <Property Name="details" Type="varchar" MaxLength="300" />
+    <Property Name="standard_time" Type="int" />
+    <Property Name="is_active" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="tbl_cc_category">
+    <Key>
+      <PropertyRef Name="cc_category_id" />
+    </Key>
+    <Property Name="cc_category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="selection" Type="varchar" MaxLength="2000" />
+    <Property Name="description" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <EntityType Name="tbl_change_employee">
+    <Key>
+      <PropertyRef Name="ce_id" />
+    </Key>
+    <Property Name="ce_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="1000" />
+    <Property Name="emp_name" Type="varchar" MaxLength="1000" />
+    <Property Name="dept_id" Type="varchar" MaxLength="10" />
+    <Property Name="dept_name" Type="varchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="tbl_costcenter_meaning">
+    <Key>
+      <PropertyRef Name="m_id" />
+    </Key>
+    <Property Name="m_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cc_code" Type="varchar" MaxLength="2000" />
+    <Property Name="cc_division" Type="varchar" MaxLength="2000" />
+    <Property Name="cc_description" Type="varchar" MaxLength="3000" />
+  </EntityType>
+  <EntityType Name="tbl_daily_report">
+    <Key>
+      <PropertyRef Name="r_id" />
+    </Key>
+    <Property Name="r_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="apc_id" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="jobno" Type="varchar(max)" />
+    <Property Name="date" Type="datetime" Nullable="false" />
+    <Property Name="day" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="time_start" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="time_end" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="mins" Type="int" Nullable="false" />
+    <Property Name="cc_description" Type="varchar" MaxLength="2000" Nullable="false" />
+    <Property Name="work_description" Type="varchar(max)" Nullable="false" />
+    <Property Name="company" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tbl_downtime">
+    <Key>
+      <PropertyRef Name="downtime_id" />
+    </Key>
+    <Property Name="downtime_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="code_number" Type="varchar" MaxLength="2000" />
+    <Property Name="datestarted_of_downtime" Type="datetime" />
+    <Property Name="dateended_of_downtime" Type="datetime" />
+    <Property Name="total_mins_of_downtime" Type="int" />
+    <Property Name="downtime_cause_details" Type="varchar(max)" />
+    <Property Name="downtime_cause_id" Type="int" />
+  </EntityType>
+  <EntityType Name="tbl_downtime_cause">
+    <Key>
+      <PropertyRef Name="downtime_cause_id" />
+    </Key>
+    <Property Name="downtime_cause_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="hardware_description" Type="varchar" MaxLength="5000" />
+  </EntityType>
+  <EntityType Name="tbl_downtime_type">
+    <Key>
+      <PropertyRef Name="downtime_type_id" />
+    </Key>
+    <Property Name="downtime_type_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="tbl_employee_outside_rimp">
+    <Key>
+      <PropertyRef Name="or_id" />
+    </Key>
+    <Property Name="or_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="visitor_id" Type="varchar" MaxLength="200" />
+    <Property Name="visitor_name" Type="varchar(max)" />
+    <Property Name="visitor_company_id" Type="varchar" MaxLength="300" />
+    <Property Name="visitor_company_name" Type="varchar" MaxLength="2000" />
+    <Property Name="visitor_position" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="tbl_employees">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="cc_category_id" Type="int" Nullable="false" />
+    <Property Name="cc_id" Type="int" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="500" />
+    <Property Name="flg_status" Type="varchar" MaxLength="500" />
+    <Property Name="local_num" Type="varchar" MaxLength="200" />
+    <Property Name="email_address" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <EntityType Name="tbl_gantt_chart">
+    <Key>
+      <PropertyRef Name="gant_chart_id" />
+    </Key>
+    <Property Name="gant_chart_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="varchar" MaxLength="50" />
+    <Property Name="work_package" Type="varchar" MaxLength="5000" />
+    <Property Name="branches" Type="varchar" MaxLength="5000" />
+    <Property Name="functions" Type="varchar(max)" />
+    <Property Name="date_started" Type="date" />
+    <Property Name="date_ended" Type="date" />
+  </EntityType>
+  <EntityType Name="tbl_jo_cc_details">
+    <Key>
+      <PropertyRef Name="jo_cc_id" />
+    </Key>
+    <Property Name="jo_cc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="jobno_id" Type="int" />
+    <Property Name="category" Type="varchar" MaxLength="200" />
+    <Property Name="sbu" Type="varchar" MaxLength="200" />
+    <Property Name="division" Type="varchar" MaxLength="200" />
+    <Property Name="cost_center" Type="varchar" MaxLength="200" />
+    <Property Name="description" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="tbl_jo_creation_availability">
+    <Key>
+      <PropertyRef Name="jca_id" />
+    </Key>
+    <Property Name="jca_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="can_create" Type="varchar" MaxLength="50" />
+    <Property Name="temp_access" Type="varchar" MaxLength="2000" />
+    <Property Name="message" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tbl_joborder">
+    <Key>
+      <PropertyRef Name="jobno_id" />
+    </Key>
+    <Property Name="jobno_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="int" />
+    <Property Name="job_no" Type="varchar(max)" />
+    <Property Name="priority_id" Type="int" />
+    <Property Name="date_filed" Type="datetime" />
+    <Property Name="date_needed" Type="datetime" />
+    <Property Name="requested_by" Type="varchar" MaxLength="1000" />
+    <Property Name="noted_by" Type="varchar" MaxLength="1000" />
+    <Property Name="approved_by" Type="varchar" MaxLength="1000" />
+    <Property Name="noted_by_sign" Type="varchar" MaxLength="50" />
+    <Property Name="approved_by_sign" Type="varchar" MaxLength="50" />
+    <Property Name="rate" Type="int" />
+    <Property Name="date_confirmed" Type="datetime" />
+    <Property Name="path_barcode" Type="varchar" MaxLength="5000" />
+  </EntityType>
+  <EntityType Name="tbl_joborder_category">
+    <Key>
+      <PropertyRef Name="category_id" />
+    </Key>
+    <Property Name="category_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="tbl_joborder_details">
+    <Key>
+      <PropertyRef Name="details_id" />
+    </Key>
+    <Property Name="details_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type_id" Type="int" />
+    <Property Name="status_id" Type="int" />
+    <Property Name="sw_codenumber" Type="varchar(max)" />
+    <Property Name="sw_standard_time" Type="int" />
+    <Property Name="date_target" Type="datetime" />
+    <Property Name="date_assigned" Type="datetime" />
+    <Property Name="date_started" Type="datetime" />
+    <Property Name="date_ended" Type="datetime" />
+    <Property Name="actual_time" Type="int" />
+    <Property Name="details" Type="varchar(max)" />
+    <Property Name="purpose" Type="varchar(max)" />
+    <Property Name="diagnosis" Type="varchar(max)" />
+    <Property Name="action_taken" Type="varchar(max)" />
+    <Property Name="reason_delay" Type="varchar(max)" />
+    <Property Name="documents_remarks" Type="varchar(max)" />
+    <Property Name="apc_noted_by" Type="varchar" MaxLength="500" />
+    <Property Name="apc_approved_by" Type="varchar" MaxLength="500" />
+    <Property Name="progress_rate" Type="int" />
+    <Property Name="date_progress_updated" Type="datetime" />
+    <Property Name="assignee" Type="varchar" MaxLength="2000" />
+    <Property Name="remarks" Type="varchar" MaxLength="100" />
+    <Property Name="has_scope" Type="varchar" MaxLength="5" />
+    <Property Name="sw_gantt_chart" Type="varchar" MaxLength="2000" />
+    <Property Name="flg_is_exported" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="tbl_managers_email">
+    <Key>
+      <PropertyRef Name="me_id" />
+    </Key>
+    <Property Name="me_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="500" />
+    <Property Name="emp_name" Type="varchar(max)" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" />
+    <Property Name="email" Type="varchar" MaxLength="3000" />
+  </EntityType>
+  <EntityType Name="tbl_network">
+    <Key>
+      <PropertyRef Name="network_id" />
+    </Key>
+    <Property Name="network_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="network_code_number" Type="varchar(max)" />
+    <Property Name="location" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <EntityType Name="tbl_onhold_message">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Message" Type="varchar" MaxLength="3000" Nullable="false" />
+    <Property Name="Status" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <EntityType Name="tbl_preventive_diagnose">
+    <Key>
+      <PropertyRef Name="diagnose_id" />
+    </Key>
+    <Property Name="diagnose_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="maintenance_id" Type="int" Nullable="false" />
+    <Property Name="services_id" Type="int" />
+    <Property Name="remarks" Type="varchar" MaxLength="50" />
+    <Property Name="notes" Type="varchar(max)" />
+    <Property Name="time_finish" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="tbl_preventive_maintenance">
+    <Key>
+      <PropertyRef Name="maintenance_id" />
+    </Key>
+    <Property Name="maintenance_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="pc_id" Type="int" />
+    <Property Name="planned_month" Type="varchar" MaxLength="50" />
+    <Property Name="preventive_year" Type="varchar" MaxLength="50" />
+    <Property Name="status" Type="varchar" MaxLength="200" />
+    <Property Name="actual_date" Type="datetime" />
+    <Property Name="incharge" Type="varchar(max)" />
+    <Property Name="prepared_by" Type="varchar(max)" />
+    <Property Name="checked_by" Type="varchar(max)" />
+    <Property Name="approved_by" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tbl_preventive_pc">
+    <Key>
+      <PropertyRef Name="pc_id" />
+    </Key>
+    <Property Name="pc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="computer_name" Type="varchar" MaxLength="500" />
+    <Property Name="equipment" Type="varchar" MaxLength="200" />
+    <Property Name="owner" Type="varchar(max)" />
+    <Property Name="department" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <EntityType Name="tbl_preventive_services">
+    <Key>
+      <PropertyRef Name="services_id" />
+    </Key>
+    <Property Name="services_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="description" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="tbl_priority">
+    <Key>
+      <PropertyRef Name="priority_id" />
+    </Key>
+    <Property Name="priority_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="priority_name" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="tbl_problems">
+    <Key>
+      <PropertyRef Name="p_ID" />
+    </Key>
+    <Property Name="p_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="int" />
+    <Property Name="date_happen" Type="datetime" />
+    <Property Name="problem" Type="varchar" MaxLength="3000" />
+    <Property Name="status" Type="varchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="tbl_sbu">
+    <Key>
+      <PropertyRef Name="sbu_id" />
+    </Key>
+    <Property Name="sbu_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="sbu" Type="varchar" MaxLength="500" />
+    <Property Name="description" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <EntityType Name="tbl_sbu_costcenter">
+    <Key>
+      <PropertyRef Name="cc_id" />
+    </Key>
+    <Property Name="cc_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="dept_id" Type="varchar" MaxLength="50" />
+    <Property Name="cost_center" Type="varchar" MaxLength="100" />
+    <Property Name="description" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <EntityType Name="tbl_sbu_division">
+    <Key>
+      <PropertyRef Name="sbu_d_id" />
+    </Key>
+    <Property Name="sbu_d_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="sbu_id" Type="int" />
+    <Property Name="category" Type="varchar" MaxLength="50" />
+    <Property Name="description" Type="varchar" MaxLength="3000" />
+  </EntityType>
+  <EntityType Name="tbl_server">
+    <Key>
+      <PropertyRef Name="server_id" />
+    </Key>
+    <Property Name="server_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="server_code_number" Type="varchar(max)" />
+    <Property Name="server_name" Type="varchar" MaxLength="2000" />
+    <Property Name="server_uptime" Type="int" />
+  </EntityType>
+  <EntityType Name="tbl_status">
+    <Key>
+      <PropertyRef Name="status_id" />
+    </Key>
+    <Property Name="status_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="status" Type="varchar" MaxLength="500" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tbl_status_timeline">
+    <Key>
+      <PropertyRef Name="t_id" />
+    </Key>
+    <Property Name="t_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="int" Nullable="false" />
+    <Property Name="under_assessment" Type="datetime" />
+    <Property Name="pending_incharge" Type="datetime" />
+    <Property Name="incharge_assigned" Type="datetime" />
+    <Property Name="request_documents" Type="datetime" />
+    <Property Name="review" Type="datetime" />
+    <Property Name="rejected" Type="datetime" />
+    <Property Name="proposal" Type="datetime" />
+    <Property Name="revision" Type="datetime" />
+    <Property Name="development" Type="datetime" />
+    <Property Name="testing" Type="datetime" />
+  </EntityType>
+  <EntityType Name="tbl_sub_assignees">
+    <Key>
+      <PropertyRef Name="a_id" />
+    </Key>
+    <Property Name="a_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="details_id" Type="int" Nullable="false" />
+    <Property Name="emp_name" Type="varchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="tbl_telephone">
+    <Key>
+      <PropertyRef Name="tel_id" />
+    </Key>
+    <Property Name="tel_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="tel_name" Type="varchar" MaxLength="5000" />
+    <Property Name="tel_code_number" Type="varchar" MaxLength="5000" />
+    <Property Name="tel_location" Type="varchar" MaxLength="5000" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'JO.dbo.tbl_telephone_Rolie' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="tbl_telephone_Rolie">
+    <Key>
+      <PropertyRef Name="tel_id" />
+    </Key>
+    <Property Name="tel_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="downtime_type_id" Type="int" />
+    <Property Name="tel_name" Type="varchar" MaxLength="5000" />
+    <Property Name="tel_code_number" Type="varchar" MaxLength="5000" />
+    <Property Name="tel_location" Type="varchar" MaxLength="5000" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'JO.dbo.vw_Emails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_Emails">
+    <Key>
+      <PropertyRef Name="e_id" />
+    </Key>
+    <Property Name="e_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="500" />
+    <Property Name="email" Type="varchar(max)" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'JO.dbo.vw_Employee' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_Employee">
+    <Key>
+      <PropertyRef Name="emp_no" />
+    </Key>
+    <Property Name="emp_no" Type="int" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="8000" />
+    <Property Name="emp_name" Type="varchar(max)" />
+    <Property Name="dept_id" Type="varchar" MaxLength="300" />
+    <Property Name="dept_name" Type="varchar" MaxLength="2000" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'JO.dbo.vw_ForApprovalJO' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_ForApprovalJO">
+    <Key>
+      <PropertyRef Name="jobno_id" />
+      <PropertyRef Name="jo_status" />
+    </Key>
+    <Property Name="jobno_id" Type="int" Nullable="false" />
+    <Property Name="job_no" Type="varchar(max)" />
+    <Property Name="details" Type="varchar(max)" />
+    <Property Name="requested_by" Type="varchar" MaxLength="1000" />
+    <Property Name="jo_status" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="noted_by_sign" Type="varchar" MaxLength="50" />
+    <Property Name="approved_by_sign" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'JO.dbo.vw_Managers' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="vw_Managers">
+    <Key>
+      <PropertyRef Name="emp_no" />
+    </Key>
+    <Property Name="emp_no" Type="int" Nullable="false" />
+    <Property Name="emp_id" Type="varchar" MaxLength="200" />
+    <Property Name="emp_name" Type="varchar(max)" />
+    <Property Name="dept_id" Type="varchar" MaxLength="300" />
+    <Property Name="position" Type="varchar" MaxLength="500" />
+  </EntityType>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_all_apc_jo_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_all_assignee" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="details_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_apc_completed_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_apc_delayed_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_apc_ontime_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_assignee_ongoing_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="assignee" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dashboard_percentage_of_jod" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_departments_softwares" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="department" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_developer_jo_summary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="developer" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_email_RequestorAndDeptheads" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="jobno" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_export_daily_report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="apcid" Type="varchar" Mode="In" />
+    <Parameter Name="date" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="sp_export_excel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="datefrom" Type="date" Mode="In" />
+    <Parameter Name="dateended" Type="date" Mode="In" />
+    <Parameter Name="flg_report" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_ForApprovalJO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="department" Type="varchar" Mode="In" />
+    <Parameter Name="username" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_GeneralSearch" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="keyword" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_all_actual_standard_time" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="details_id" Type="varchar" Mode="In" />
+    <Parameter Name="type" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_my_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="user" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_myjo_graph_hw" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="person" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_myjo_summary_hw" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="person" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_myjo_summary_sw" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="person" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_get_preventive_maintenance" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_get_sbu_description" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="SBU_ID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_get_transaction" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="empid" Type="varchar" Mode="In" />
+    <Parameter Name="datefrom" Type="varchar" Mode="In" />
+    <Parameter Name="dateto" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_graph_costcenter" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="tmpdatefrom" Type="date" Mode="In" />
+    <Parameter Name="tmpdateended" Type="date" Mode="In" />
+  </Function>
+  <Function Name="sp_hardware_counts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_hw_jo_monthly_report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="date_filter" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="sp_jo_by_dept" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_jo_by_dept_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_jo_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="jobno" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_jo_pending_status" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_jo_time_allocation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="details_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_jo_unassigned" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_joborder_classification" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_joborder_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_jodetails_by_dept" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="deptname" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_kpi_completedJO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="year" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_kpi_hardware" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_kpi_joperyear" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_kpi_joPerYeardetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_kpi_monthlyAssignedJO" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="year" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="sp_kpi_resource_utilization" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_kpi_satisfactory_rate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_latest_available_apc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_network_downtime_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_server_downtime_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_shared_jo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="assignee" Type="varchar(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_software_count" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_sw_jo_issues" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Details_ID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_sw_jo_monthly_report" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="date_filter" Type="datetime" Mode="In" />
+  </Function>
+  <Function Name="sp_tel_downtime_details" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="sp_timeline_status" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="DetailsID" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="JOModelStoreContainer">
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_allocated_time" EntityType="Self.tbl_allocated_time" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_apc_personnel" EntityType="Self.tbl_apc_personnel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_applications" EntityType="Self.tbl_applications" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_category_type" EntityType="Self.tbl_category_type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_cc_category" EntityType="Self.tbl_cc_category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_change_employee" EntityType="Self.tbl_change_employee" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_costcenter_meaning" EntityType="Self.tbl_costcenter_meaning" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_daily_report" EntityType="Self.tbl_daily_report" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_downtime" EntityType="Self.tbl_downtime" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_downtime_cause" EntityType="Self.tbl_downtime_cause" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_downtime_type" EntityType="Self.tbl_downtime_type" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_employee_outside_rimp" EntityType="Self.tbl_employee_outside_rimp" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_employees" EntityType="Self.tbl_employees" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_gantt_chart" EntityType="Self.tbl_gantt_chart" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_jo_cc_details" EntityType="Self.tbl_jo_cc_details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_jo_creation_availability" EntityType="Self.tbl_jo_creation_availability" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_joborder" EntityType="Self.tbl_joborder" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_joborder_category" EntityType="Self.tbl_joborder_category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_joborder_details" EntityType="Self.tbl_joborder_details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_managers_email" EntityType="Self.tbl_managers_email" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_network" EntityType="Self.tbl_network" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_onhold_message" EntityType="Self.tbl_onhold_message" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_preventive_diagnose" EntityType="Self.tbl_preventive_diagnose" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_preventive_maintenance" EntityType="Self.tbl_preventive_maintenance" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_preventive_pc" EntityType="Self.tbl_preventive_pc" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_preventive_services" EntityType="Self.tbl_preventive_services" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_priority" EntityType="Self.tbl_priority" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_problems" EntityType="Self.tbl_problems" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_sbu" EntityType="Self.tbl_sbu" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_sbu_costcenter" EntityType="Self.tbl_sbu_costcenter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_sbu_division" EntityType="Self.tbl_sbu_division" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_server" EntityType="Self.tbl_server" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_status" EntityType="Self.tbl_status" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_status_timeline" EntityType="Self.tbl_status_timeline" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_sub_assignees" EntityType="Self.tbl_sub_assignees" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_telephone" EntityType="Self.tbl_telephone" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="tbl_telephone_Rolie" EntityType="Self.tbl_telephone_Rolie" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [tbl_telephone_Rolie].[tel_id] AS [tel_id], 
+    [tbl_telephone_Rolie].[downtime_type_id] AS [downtime_type_id], 
+    [tbl_telephone_Rolie].[tel_name] AS [tel_name], 
+    [tbl_telephone_Rolie].[tel_code_number] AS [tel_code_number], 
+    [tbl_telephone_Rolie].[tel_location] AS [tel_location]
+    FROM [dbo].[tbl_telephone_Rolie] AS [tbl_telephone_Rolie]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_Emails" EntityType="Self.vw_Emails" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vw_Emails].[e_id] AS [e_id], 
+    [vw_Emails].[emp_id] AS [emp_id], 
+    [vw_Emails].[email] AS [email]
+    FROM [dbo].[vw_Emails] AS [vw_Emails]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_Employee" EntityType="Self.vw_Employee" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vw_Employee].[emp_no] AS [emp_no], 
+    [vw_Employee].[emp_id] AS [emp_id], 
+    [vw_Employee].[emp_name] AS [emp_name], 
+    [vw_Employee].[dept_id] AS [dept_id], 
+    [vw_Employee].[dept_name] AS [dept_name]
+    FROM [dbo].[vw_Employee] AS [vw_Employee]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_ForApprovalJO" EntityType="Self.vw_ForApprovalJO" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vw_ForApprovalJO].[jobno_id] AS [jobno_id], 
+    [vw_ForApprovalJO].[job_no] AS [job_no], 
+    [vw_ForApprovalJO].[details] AS [details], 
+    [vw_ForApprovalJO].[requested_by] AS [requested_by], 
+    [vw_ForApprovalJO].[jo_status] AS [jo_status], 
+    [vw_ForApprovalJO].[noted_by_sign] AS [noted_by_sign], 
+    [vw_ForApprovalJO].[approved_by_sign] AS [approved_by_sign]
+    FROM [dbo].[vw_ForApprovalJO] AS [vw_ForApprovalJO]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="vw_Managers" EntityType="Self.vw_Managers" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vw_Managers].[emp_no] AS [emp_no], 
+    [vw_Managers].[emp_id] AS [emp_id], 
+    [vw_Managers].[emp_name] AS [emp_name], 
+    [vw_Managers].[dept_id] AS [dept_id], 
+    [vw_Managers].[position] AS [position]
+    FROM [dbo].[vw_Managers] AS [vw_Managers]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

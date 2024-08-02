@@ -1,0 +1,83 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<Web_RIMP.Models.AllHardwareJOModel>
+
+
+<div class="row">
+    <div class="col-12" id="dvBody">
+        <div id="divHeader" class="custom-table">
+            <p id="tblLabel">List Of All Hardware Job Order</p>
+        </div>
+        <div id="searchDiv">
+            <div class="row">
+                <div class="col">
+                    <div class="input-group" id="txtSearch">
+                        <input type="text" class="form-control" placeholder="Search applications/Programmer" id="txt-hw-search">
+                        <div class="input-group-append">
+                            <button class="btn btn-dark" type="button" id="btn-hw-search" onclick="joSearch('hw')">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button class="btn btn-info" type="button" onclick="reloadPage()">
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="searchTbl">
+
+        </div>
+        <div class="table-responsive">
+            <table class="table table-striped table-dark table-hover table-responsive" id="tbl-hw" style="text-align:center;">
+                <thead class="thead-dark">
+                    <tr id="tblTr">
+                        <th style="width:17%">Job Order #</th>
+                        <th>Type</th>
+                        <th style="width:25%">Details</th>
+                        <th>Status</th>
+                        <th style="width:7%;">Standard Time</th>
+                        <th>Assignee</th>
+                        <th style="width:10%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="tb-hw">
+                    @foreach (var model in Model)
+                    {
+                        var jo = model.JoNumber;
+                        <tr>
+                            <td style="width:17%">@Html.DisplayFor(modelItem => model.JoNumber)</td>
+                            <td>@Html.DisplayFor(modelItem => model.Type)</td>
+                            <td style="width:25%">@Html.DisplayFor(modelItem => model.Details)</td>
+                            <td>@Html.DisplayFor(modelItem => model.Status)</td>
+                            <td style="width:7%;">@Html.DisplayFor(modelItem => model.StandardTime)</td>
+                            <td>@Html.DisplayFor(modelItem => model.Assignee)</td>
+                            <td style="width:10%;">
+                                <a href="@Url.Action("JobOrderDetails","JobOrders",new { JoNumber = jo})#AllJo" class="btn btn-outline-warning" id="createBtn" style="float:left;">
+                                    <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-2" id="hwPagerID" style="color:white;">
+                Showing @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                out of @Model.PageCount pages
+            </div>
+            <div id="hwID" class="col-10" style="margin-top:-25px;">
+
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action("AllHardwareJO", new { page }), PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(
+                 new AjaxOptions()
+                 {
+                     HttpMethod = "GET",
+                     UpdateTargetId = "hwID",
+                     OnBegin = "displayLoader",
+                 }))
+            </div>
+        </div>
+    </div>
+</div>
+

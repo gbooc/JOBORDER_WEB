@@ -1,0 +1,453 @@
+﻿
+@{
+    ViewBag.Title = "KPIJobOrder";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var CurrentYear = DateTime.Today.ToString("yyyy");
+    var LastYear = DateTime.Today.AddYears(-1).ToString("yyyy");
+}
+
+<script src="~/Content/js/jspdf.debug.js"></script>
+<script src="~/Content/js/chartjs/Chart.js"></script>
+<script src="~/Content/custom/KPI/JobOrderKPI.js"></script>
+<link rel="stylesheet" href="~/Content/css/KPIJO.css">
+
+
+
+<div class="page-header row no-gutters py-4" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">Key Performance Indicator</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<hr>
+
+<div class="cards" style="padding: 10px 10px 40px 10px;">
+    <div class="row">
+        <div class="col-8">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">Monthly JO Key Performance Indicator</p>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:10px 10px 10px 10px;">
+        <div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-area-chart" style="color:darkred;"></i>
+                </div>
+                <div class="col-7">
+                    <h6><u>Solved/Closed JO Report</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Quantitative Indicator</h4>
+                </div>
+                <div class="col">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-danger" onclick="completedJO('@LastYear')">
+                            <i class="fa fa-calendar-minus-o"></i>
+                            Last Fiscal Year
+                        </button>
+                        <button class="btn btn-dark" onclick="completedJO('@CurrentYear')">
+                            <i class="fa fa-calendar-plus-o"></i> Current Fiscal Year
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="completedChart" height="100"></canvas>
+                </div>
+            </div>
+            <div class="p-0 d-block card-footer">
+                <div class="row" style="padding:5px 1px 5px 1px;">
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-envelope"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedEmail"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-phone"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedTel"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-desktop"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedDesktop"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-signal"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedNetwork"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-server"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedServer"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-pencil-square-o"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedOthers"></font>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-outline" style="width:100%;">
+                            <i class="fa fa-chrome"></i>
+                            <span class="badge badge-light">
+                                <font id="lbl-ClosedSoftware"></font>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-4" id="dvDetails">
+            <div class="row">
+                <div class="col">
+                    <div class="row" style="font-size:25px;">
+                        <div class="col-1">
+                            <i class="fa fa-circle-o-notch" style="color:darkred;"></i>
+                        </div>
+                        <div class="col">
+                            <h6><u>AVG Hardware Performance</u></h6>
+                            <h5 style="color:#B03A2E;font-weight:bolder;">Process Indicator</h5>
+                        </div>
+                    </div>
+                    <div class="w3-animate-zoom">
+                        <div class="row">
+                            <div class="col">
+                                <canvas id="resolutionChart" height="80"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <label id="lbl-progress" style="font-size:23px;color:#212F3D;font-weight:bolder;"></label> &nbsp;
+                        </div>
+                        <div class="col">
+                            <div class="progress" style="margin-top:10px;">
+                                <div class="progress-bar progress-bar-animated bg-info progress-bar-striped" role="progressbar" aria-valuenow="0"
+                                     aria-valuemin="0" aria-valuemax="100" style="width:10%;" id="dv-progress">
+                                </div>
+                            </div>
+                            <p style="color:darkgray;font-weight:bolder;">Achieve Resolution</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="row" style="font-size:25px;">
+                        <div class="col-1">
+                            <i class="fa fa-commenting-o" style="color:darkred;"></i>
+                        </div>
+                        <div class="col-4">
+                            <h6><u>Satisfaction Survey</u></h6>
+                            <h6 style="color:#B03A2E;font-weight:bolder;">Qualitative Indicator</h6>
+                        </div>
+                        <div class="col">
+                        </div>
+                        <div class="col-5">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="satisfactoryChart" height="100"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:10px 10px 10px 10px;">
+        <div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-users" style="color:darkred;"></i>
+
+                </div>
+                <div class="col-4">
+                    <h6><u>ALL JO By Assignee</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Load Indicator</h4>
+                </div>
+                <div class="col">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-9">
+                    <canvas id="jobyAssigneeChart" height="100"></canvas>
+                </div>
+                <div class="col">
+                    <table class="table table-responsive-md" id="tbl-jotype">
+                        <thead>
+                            <tr>
+                                <th style="width:55%;"></th>
+                                <th>Hardware</th>
+                                <th>Software</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb-jotype">
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        @*<div class="col" id="dvDetails" style="margin-right:20px;">
+                <div class="row" style="font-size:25px;">
+                    <div class="col-1">
+                        <i class="fa fa-commenting-o" style="color:darkred;"></i>
+                    </div>
+                    <div class="col-4">
+                        <h6><u>Satisfaction Survey</u></h6>
+                        <h4 style="color:#B03A2E;font-weight:bolder;">Qualitative Indicator</h4>
+                    </div>
+                    <div class="col">
+                    </div>
+                    <div class="col-5">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <canvas id="satisfactoryChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>*@
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-8">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">Yearly JO Key Performance Indicator</p>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:10px 10px 40px 10px;">
+        <div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-line-chart" style="color:darkred;"></i>
+                </div>
+                <div class="col-4">
+                    <h6><u>All JO Process By Year</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Leading Indicator</h4>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-5">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="alljobyearChart" height="70"></canvas>
+                </div>
+            </div>
+        </div>
+        @*<div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-clock-o" style="color:darkred;"></i>
+                </div>
+                <div class="col-4">
+                    <h6><u>On-time/Delayed JO/Unassigned</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Process Indicator</h4>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-5">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="delayedChart" height="100"></canvas>
+                </div>
+            </div>
+        </div>*@
+    </div>
+    <div class="row" style="padding:10px 10px 40px 10px;">
+        <div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-clock-o" style="color:darkred;"></i>
+                </div>
+                <div class="col-4">
+                    <h6><u>Resource Utilization</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Load Indicator</h4>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-5">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="resourceChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="padding:10px 10px 40px 10px;">
+        <div class="col" id="dvDetails" style="margin-right:20px;">
+            <div class="row" style="font-size:25px;">
+                <div class="col-1">
+                    <i class="fa fa-signal" style="color:darkred;"></i>
+                </div>
+                <div class="col-4">
+                    <h6><u>Network Monthly Downtime</u></h6>
+                    <h4 style="color:#B03A2E;font-weight:bolder;">Mean Time To Resolve (MTTR)</h4>
+                </div>
+                <div class="col">
+                </div>
+                <div class="col-5">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <canvas id="downtimeChart" height="80"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@*<div class="cards">
+        <div class="row">
+            <div class="col-6">
+
+            </div>
+            <div class="col-2">
+                <select class="form-control" style="margin-top:7px;" id="hw-month">
+                    <option value="01">JANUARY</option>
+                    <option value="02">FEBRUARY</option>
+                    <option value="03">March</option>
+                    <option value="04">APRIL</option>
+                    <option value="05">MAY</option>
+                    <option value="06">JUNE</option>
+                    <option value="07">JULY</option>
+                    <option value="08">AUGUST</option>
+                    <option value="09">SEPTEMBER</option>
+                    <option value="10">OCTOBER</option>
+                    <option value="11">NOVEMBER</option>
+                    <option value="12">DECEMBER</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <select class="form-control" style="margin-top:7px;" id="hw-year">
+                </select>
+            </div>
+            <div class="col-2">
+                <button class="btn btn-dark" id="btn-hw-populate" onclick="searchGraph('custom')" style="margin-top:7px;">
+                    <i class="fa fa-share-square-o"></i> Populate
+                </button>
+            </div>
+        </div>
+        <br />
+        <div id="dvBody" style="width: 100%;">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">Monthly Graphical Reports</p>
+            </div>
+
+            <div class="row">
+                <div class="col-9" id="dvDetails" style="margin-left: 105px;">
+                    <h4>Hardware Based On Actual And Standard Time</h4>
+
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="hwChart" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="col-5" id="dvDetails" style="margin-left: 25px;">
+                    <div class="row">
+                        <div class="col">
+                            <h6>Hardware Based On Target Date </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="hwchart-target" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5" id="dvDetails" style="margin-left: 50px;">
+                    <div class="row">
+                        <div class="col">
+                            <h6>Software Based On Target Date </h6>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <canvas id="swChart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cards">
+        <div id="dvBody">
+            <br />
+            <div class="row">
+                <div class="col">
+                    <div id="divHeader" class="custom-table" style="width:30%;">
+                        <p id="tblLabel">All Closed JobOrder</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="table-responsive">
+                    <div class="col-11" style="margin-left: 50px;">
+                        <table class="table table-striped table-dark table-hover table-responsive-lg" id="tbl-jo-details">
+                            <thead>
+                                <tr id="tblTr">
+                                    <th style="width:2%;"></th>
+                                    <th style="width:16%;">JobOrder #</th>
+                                    <th style="width:12%;">Type</th>
+                                    <th style="width:12%;">Details</th>
+                                    <th style="width:12%;">Date Target</th>
+                                    <th style="width:12%;">Date Started</th>
+                                    <th style="width:12%;">Date Ended</th>
+                                    <th style="width:14%;">Assignee</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-jo-details" style="text-align:center;">
+                                <tr>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>*@

@@ -1,0 +1,16 @@
+﻿#txtMessage{
+    height: 300px;
+}
+
+.nav-tabs.nav-tabs-solid {
+    background-color: #fafafa;
+    border: 0;
+}
+
+    .nav-tabs.nav-tabs-solid > li > a.active, .nav-tabs.nav-tabs-solid > li > a.active:focus, .nav-tabs.nav-tabs-solid > li > a.active:hover {
+        background-color: #7f0000;
+        border-color: #ff9b44;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+    }

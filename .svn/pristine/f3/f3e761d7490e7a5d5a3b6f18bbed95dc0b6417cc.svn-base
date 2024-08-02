@@ -1,0 +1,69 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SurveySubmission</title>
+
+    @* --------- C S S --------------*@
+    <link rel="stylesheet" href="~/Content/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/Content/css/jquery-ui.css">
+    @* <link rel="stylesheet" href="~/Content/js/qTip/jquery.qtip.css">*@
+
+    @*--------- E N D ---------------*@
+
+
+    @*--------J a v a s c r i p t ---*@
+    <script src="~/Content/js/jquery-3.4.1.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+    <script src="~/Content/js/jquery.validate.min.js"></script>
+    <script src="~/Content/js/modernizr-2.8.3.js"></script>
+    <script src="~/Content/js/jquery-ui.js"></script>
+    <script src="~/Content/js/jquery.unobtrusive-ajax.js"></script>
+
+    <style>
+            .good-review-score {
+                background-color: #66CC33;
+                color: white;
+                text-align: center;
+                padding: 10px;
+                margin-right: 5px
+                /*width: 50px;
+        height: 30px;
+        line-height: 30px*/
+            }
+    </style>
+</head>
+<body>
+    <div class="row" style="margin-top:100px;">
+        <div class="col-4">
+
+        </div>
+        <div class="col-8">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-block">
+                                <h1 class="card-text good-review-score float-left"><i class="fa fa-star"></i></h1>
+                                <h4 class="card-title">Job Order Approval.</h4>
+                                <p class="card-text">Successfully forwarded the JO to APC department.</p>
+                            </div>
+                            <div class="card-footer">
+                                <p class="card-text text-right"><a href="http://kpsweb2:1001">Go To Job Order</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

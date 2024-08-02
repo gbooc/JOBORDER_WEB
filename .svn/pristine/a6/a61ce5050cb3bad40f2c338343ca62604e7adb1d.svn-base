@@ -1,0 +1,54 @@
+﻿#tbl-department thead tr {
+    display: block;
+}
+
+#tbl-department tr {
+    display: block;
+}
+
+#tbl-department td {
+    width: 200px;
+}
+
+#tbl-department tbody {
+    height: 200px;
+    overflow: auto;
+}
+
+
+#tbl-deptSoftwares thead tr {
+    display: block;
+}
+
+#tbl-deptSoftwares tr {
+    display: block;
+}
+#tbl-deptSoftwares th {
+    width: 200px;
+}
+#tbl-deptSoftwares td {
+    width: 200px;
+}
+
+#tbl-deptSoftwares tbody {
+    display: block;
+    height: 950px;
+    overflow: auto;
+}
+
+.dash-widget-icon {
+    background-color: rgba(216,178,178,.5);
+    border-radius: 100%;
+    color: #7f0000;
+    display: inline-block;
+    float: left;
+    font-size: 60px;
+    height: 90px;
+    line-height: 85px;
+    margin-right: 10px;
+    text-align: center;
+    width: 90px;
+}
+.dash-widget-info {
+    text-align: right;
+}

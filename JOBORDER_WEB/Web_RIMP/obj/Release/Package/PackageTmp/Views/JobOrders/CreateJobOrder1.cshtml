@@ -1,0 +1,656 @@
+﻿@model IEnumerable<Web_RIMP.Models.CreateJobOrderModel>
+
+@*@using PagedList.Mvc;
+    @model PagedList.IPagedList<Web_RIMP.Models.CreateJobOrderModel>*@
+@{
+    ViewBag.Title = "CreateJobOrder";
+    Layout = "~/Views/Shared/Homepage_LayoutPage.cshtml";
+
+    var Requestor = Request.Cookies["Fullname"].Value.ToString();
+    var Department = Request.Cookies["Department"].Value.ToString();
+
+}
+<link rel="stylesheet" href="~/Content/css/CreateJobOrder.css">
+<script src="~/Content/custom/JobOrders/CreateJobOrder.js"></script>
+<script src="~/Content/js/jspdf.debug.js"></script>
+
+<link rel="stylesheet" href="~/Content/css/jquery-ui.css">
+<script src="~/Content/js/jquery-ui.js"></script>
+
+<label id="lblDepartment" style="display:none;">@Department</label>
+<label style="display:none;" id="lbl-user-category">@ViewBag.CCCategory</label>
+<div class="page-header row no-gutters py-4 shadow-sm p-3 mb-5 rounded" id="dvTitle">
+    <div class="col-12">
+        <div class="row">
+            <div class="col">
+                <h3 class="page-title" id="lblTitleHeader" style="font-size:25px;">New Job Order</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card-body p-0 pb-3 text-center" id="tblverlay">
+    <img src="~/Content/gif/loader7.gif" id="imgLoader" />
+</div>
+
+<div id="dvContainer">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="row">
+                <div class="col">
+                    <div id="searchDiv">
+                        <div class="input-group" id="txtSearch">
+                            <input type="text" class="form-control" placeholder="Search applications/Programmer" id="searchAppTxt">
+                            <div class="input-group-append" onclick="searchApplication()">
+                                <a class="btn btn-dark" href="#">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> @*#F0F3F4*@
+            <div class="row">
+                <div class="col-4">
+                    <div class="row" style="margin-left:10px;">
+                        <table class="table table-striped table-responsive-sm table-dark" id="tbl-department">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="border-0" style="width:300px;">Department</th>
+                                    <th scope="col" class="border-0" style="width:50px;">...</th>
+                                </tr>
+                            </thead>
+                            <tbody class="tb-department">
+                                @foreach (var Dept in ViewBag.VBDepartment)
+                                {
+                                    var DeptName = Dept.dept_name;
+                                    <tr>
+                                        <td style="width:300px;">@DeptName</td>
+                                        <td style="width:50px;">
+                                        <button class="btn btn-info" onclick="alert('Creationg of JO is temporarily on hold, please contact APC department.');"><i class="fa fa-pencil-square"></i></button>
+                                            </td> @*onclick="swOfDepartment('@DeptName')"*@
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <div class="row" style="margin-left:15px;">
+                        <div class="col">
+                            <table class="table table-striped table-responsive-sm table-dark" id="tbl-deptSoftwares">
+                                <thead>
+                                    <tr>
+
+                                        <th style="width:400px;">System Name</th>
+                                        <th style="width:300px;">Programmer</th>
+                                        <th style="width: 150px;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tb-deptSoftwares">
+                                    @foreach (var model in Model)
+                                    {
+                                        var CodeNumber = model.Sw_CodeNumber;
+                                        var Application = model.Sw_Application;
+
+                                        <tr class="w3-hover-blue-gray">
+                                            <td style="width:400px;">
+                                                <label id="app_@CodeNumber">@Application</label>
+                                            </td>
+                                            <td style="width:300px;">
+                                                @Html.DisplayFor(modelItem => model.Sw_Programmer)
+                                            </td>
+                                            <td style="width:150px;">
+                                                <a href="#" class="btn btn-info" id="createBtn" onclick="alert('Creationg of JO is temporarily on hold, please contact APC department.');">
+                                                    @*createJo('@CodeNumber','Software','8','@Application','0')*@
+                                                    <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div id="divHeader" class="custom-table">
+                <p id="tblLabel">Hardware Support</p>
+            </div>
+            <table class="table-borderless table-hover table-responsive-md table-dark" id="tblBody">
+                <thead>
+                    <tr id="tblTr">
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody class="tblBody">
+                    @{
+                        var idCount = 1;
+                        var CurrentType = "";
+                    }
+
+                    @foreach (var model in ViewBag.HardwareType)
+                    {
+                        if (model.Hw_TypeID >= 1)
+                        {
+                            var name = model.Hw_Type;
+                            CurrentType = name;
+                            <tr>
+                                <td>
+                                    <div id="accordion">
+                                        <div class="card">
+                                            <div class="card-header" id="heading_@idCount">
+                                                <h5 class="mb-0">
+                                                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_@idCount" aria-expanded="true" aria-controls="collapse_@idCount">
+                                                        @switch (model.Hw_Type)
+                                                        {
+                                                            case "Email":<i class="fa fa-envelope"></i> break;
+                                                            case "Telephone": <i class="fa fa-phone"></i> break;
+                                                            case "Desktop": <i class="fa fa-desktop"></i> break;
+                                                            case "Network": <i class="fa fa-signal"></i> break;
+                                                            case "Server": <i class="fa fa-server"></i> break;
+                                                            case "Others": <i class="fa fa-pencil-square"></i>break;
+                                                        }
+                                                        &nbsp; @name
+                                                    </button>
+                                                </h5>
+                                            </div>
+                                            <div id="collapse_@idCount" class="collapse" aria-labelledby="heading_@idCount" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <table class="table-borderless table-responsive-md table-dark" id="tblBody">
+                                                        <thead>
+                                                            <tr>
+                                                                <th id="tblHeader">Name</th>
+                                                                @*  <th>Standard Time(Mins)</th>*@
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="tblBody">
+                                                            @foreach (var details in ViewBag.HardwareDetails)
+                                                            {
+
+                                                                if (CurrentType.Equals(details.Hw_Type))
+                                                                {
+                                                                    var CodeNumber = details.Hw_CodeNumber;
+                                                                    var Category = details.Hw_Type;
+                                                                    var Subcategory = details.Hw_TypeID;
+                                                                    var SubcategoryTxt = details.Hw_Details;
+                                                                    var StandardTime = details.Hw_standardTime;
+                                                                    <tr class="w3-hover-blue-gray">
+                                                                        <td>@details.Hw_Details</td>
+                                                                        @*<td>@details.Hw_standardTime</td>*@
+                                                                        <td>
+                                                                            <a href="#" class="btn btn-outline-info" id="createBtn" onclick="createJo('@CodeNumber','@Category','@Subcategory','@SubcategoryTxt','@StandardTime')">
+                                                                                @*alert('Creationg of JO is temporarily on hold, please contact APC department.');*@
+                                                                                @*onclick="createJo('@CodeNumber','@Category','@Subcategory','@SubcategoryTxt','@StandardTime')"*@
+                                                                                <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            CurrentType = "";
+                            idCount++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div id="dvContainer">
+        <div class="row">
+            <div class="col-8" id="dvBody">
+                <div id="divHeader" class="custom-table">
+                    <p id="tblLabel">List Of All Applications</p>
+                </div>
+                <div id="searchDiv">
+                    <div class="input-group" id="txtSearch">
+                        <input type="text" class="form-control" placeholder="Search applications/Programmer" id="searchAppTxt">
+                        <div class="input-group-append" onclick="searchApplication()">
+                            <a class="btn btn-dark" href="#">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div style="width:100%;">
+                    <a href="#" class="btn btn-info" id="createBtn" onclick="createJo('','Software','8','','0')">
+                        <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                        Create New Application
+                    </a>
+                </div>
+                <div>
+                    <small id="sm-no-access" style="display:none;color: white;">
+                        <i class="fa fa-times-circle fa-2x"></i>  Sorry, you do not have access for this button.
+                    </small>
+                </div>
+                <div id="searchTbl">
+
+                </div>
+                <table class="table table-striped table-dark table-hover table-responsive-md" id="tblBody" style="height:100px;">
+                    <thead>
+                        <tr id="tblTr">
+
+                            <th>@Html.ActionLink("Code Number", "CreateJobOrder", new { sortOrder = "CodeNumber" })</th>
+                            <th>@Html.ActionLink("Title", "CreateJobOrder", new { sortOrder = "Title" })</th>
+                            <th>@Html.ActionLink("Programmer", "CreateJobOrder", new { sortOrder = "Programmer" })</th>
+                            <th>@Html.ActionLink("Department", "CreateJobOrder", new { sortOrder = "Department" })</th>
+                            <th style="width: 150px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var model in Model)
+                        {
+                            var CodeNumber = model.Sw_CodeNumber;
+                            var Application = model.Sw_Application;
+
+                            <tr class="w3-hover-blue-gray">
+                                <td>
+                                    @Html.DisplayFor(modelItem => model.Sw_CodeNumber)
+                                </td>
+                                <td>
+                                    <label id="app_@CodeNumber">@Application</label>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => model.Sw_Programmer)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => model.Sw_UserDepartment)
+                                </td>
+                                <td>
+                                    <a href="#" class="btn btn-outline-info" id="createBtn" onclick="createJo('@CodeNumber','Software','8','@Application','0')">
+                                        <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col">
+                        <p style="text-align:center;color:white;">
+                            Showing @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber)
+                            out of @Model.PageCount pages
+                        </p>
+                        <div style="text-align:center;">
+                            @Html.PagedListPager(Model, page => Url.Action("CreateJobOrder", new { page }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <div id="divHeader" class="custom-table">
+                    <p id="tblLabel">Hardware Support</p>
+                </div>
+                <table class="table-borderless table-hover table-responsive-md" id="tblBody">
+                    <thead>
+                        <tr id="tblTr">
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody class="tblBody">
+                        @{
+                            var idCount = 1;
+                            var CurrentType = "";
+                        }
+
+                        @foreach (var model in ViewBag.HardwareType)
+                        {
+                            if (model.Hw_TypeID >= 1)
+                            {
+                                var name = model.Hw_Type;
+                                CurrentType = name;
+                                <tr>
+                                    <td>
+                                        <div id="accordion">
+                                            <div class="card">
+                                                <div class="card-header" id="heading_@idCount">
+                                                    <h5 class="mb-0">
+                                                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapse_@idCount" aria-expanded="true" aria-controls="collapse_@idCount">
+                                                            @switch (model.Hw_Type)
+                                                            {
+                                                                case "Email":<i class="fa fa-envelope"></i> break;
+                                                                case "Telephone": <i class="fa fa-phone"></i> break;
+                                                                case "Desktop": <i class="fa fa-desktop"></i> break;
+                                                                case "Network": <i class="fa fa-signal"></i> break;
+                                                                case "Server": <i class="fa fa-server"></i> break;
+                                                                case "Others": <i class="fa fa-pencil-square"></i>break;
+                                                            }
+                                                            &nbsp; @name
+                                                        </button>
+                                                    </h5>
+                                                </div>
+                                                <div id="collapse_@idCount" class="collapse" aria-labelledby="heading_@idCount" data-parent="#accordion">
+                                                    <div class="card-body">
+                                                        <table class="table-borderless table-hover table-responsive-md" id="tblBody">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th id="tblHeader">Name</th>
+                                                                    <th>Standard Time(Mins)</th>
+                                                                    <th></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody class="tblBody">
+                                                                @foreach (var details in ViewBag.HardwareDetails)
+                                                                {
+
+                                                                    if (CurrentType.Equals(details.Hw_Type))
+                                                                    {
+                                                                        var CodeNumber = details.Hw_CodeNumber;
+                                                                        var Category = details.Hw_Type;
+                                                                        var Subcategory = details.Hw_TypeID;
+                                                                        var SubcategoryTxt = details.Hw_Details;
+                                                                        var StandardTime = details.Hw_standardTime;
+                                                                        <tr class="w3-hover-blue-gray">
+                                                                            <td>@details.Hw_Details</td>
+                                                                            <td>@details.Hw_standardTime</td>
+                                                                            <td>
+                                                                                <a href="#" class="btn btn-outline-dark" id="createBtn" onclick="createJo('@CodeNumber','@Category','@Subcategory','@SubcategoryTxt','@StandardTime')">
+                                                                                    <i class="fa fa-pencil-square" style="font-size:18px;"></i>
+                                                                                </a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                CurrentType = "";
+                                idCount++;
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>*@
+
+
+@*---------------------M O  D A L New Job Order ---------------------------------------------*@
+
+<div class="modal fade bs-example-modal-new1" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-xl">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="mdBody">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Create JobOrder</p>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <div class="form-row" style="font-size: 15px;">
+                                <div class="form-group col-md-12">
+                                    <div>
+                                        <h3 style="margin-bottom: 10px;font-size:18px;" id="lblTitleHeader"> Requestor Information</h3>
+                                    </div>
+                                    <div id="joInfo">
+                                        <div class="row">
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Requestor Name: </font>
+                                                <label class="lblTitle" id="requestorID">@Requestor</label>
+                                            </div>
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Department:</font>
+                                                <label class="lblTitle" id="departmentID">@Department</label>
+                                            </div>
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Date filed:</font>
+                                                <label class="lblTitle" id="datefiledID"> @DateTime.Now</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Category:</font>
+                                                <label class="lblTitle" id="categoryID"></label>
+                                            </div>
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Details:</font>
+                                                <label class="lblTitle" id="subCategoryTxt"></label>
+                                                <label class="lblTitle" id="subCategoryID" style="display:none;"></label>
+                                            </div>
+                                            <div class="col">
+                                                <font id="lblTitleHeader">Standard Time:(mins)</font>
+                                                <label class="lblTitle" id="standardTimeID"></label>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                    <div style="padding: 10px 10px 10px 10px;">
+                                        <div>
+                                            <h3 style="margin-bottom: 10px; font-size:18px;" id="lblTitleHeader">Required Fields</h3>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <div class="col">
+                                                        <label class="lblTitle" id="codenumberID" style="display:none;"></label>
+                                                        <font id="lblTitleHeader">Job Order #:</font>
+                                                    </div>
+                                                    <div class="col">
+                                                        <input type="text" class="form-control" id="jonumberID" readonly />
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Cost Center:</font>
+                                                    <input type="text" class="form-control" id="txt-costcenter" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">SBU:</font>
+                                                    <select class="form-control" id="slct-sbu" onchange="getDivision(this)">
+                                                        <option value=""></option>
+                                                        @foreach (var SBU in ViewBag.SBU)
+                                                        {
+                                                            var ID = SBU.sbu_id;
+                                                            var Description = SBU.description;
+
+                                                            <option value="@ID">@Description</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Section:</font>
+                                                    <select class="form-control" id="slct-sect" onchange="setCCDetails()">
+                                                        <option value=""></option>
+                                                        @foreach (var sections in ViewBag.Sections)
+                                                        {
+                                                            var Costcenter = sections.cost_center;
+                                                            var DeptSection = sections.description;
+
+                                                            <option value="@Costcenter">@DeptSection</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Priority:</font>
+                                                    <select class="form-control" id="priorityID">
+                                                        <option value="3">Medium</option>
+                                                        @foreach (var priority in ViewBag.Priority)
+                                                        {
+                                                            var value = priority.priority_name;
+                                                            var priorityID = priority.priority_id;
+                                                            <option value="@priorityID">@value</option>
+                                                        }
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row" id="systemNameID" style="display:none;">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">System Name:</font>
+                                                    <input type="text" class="form-control" id="txtSystemId">
+                                                </div>
+                                            </div>
+                                            <div class="row" id="dv-workdetails">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Work Details:</font>
+                                                    <textarea class="form-control" id="workDetailsID"></textarea>
+                                                    <label id="display_count" style="font-family:Verdana;font-weight:400;"></label>
+                                                </div>
+                                            </div>
+                                            <div class="row" id="dv-purpose">
+                                                <div class="col">
+                                                    <font id="lblTitleHeader">Purpose:</font>
+                                                    <textarea class="form-control" id="purposeID"></textarea>
+                                                    <label id="display_count-p" style="font-family:Verdana;font-weight:400;"></label>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                        </div>
+                                    </div>
+                                    <div style="padding: 0px 0px 10px 10px;" id="dv-approvedBy">
+                                        <div style="width: 100%;box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.2); padding: 10px 10px 10px 10px;">
+                                            <div class="row">
+                                                <div class="col">
+                                                    @* <img src="~/Content/img/signtest.png" id="imgSign" />*@
+                                                    <div>
+                                                        <font id="lblTitleHeader">Noted By:</font>
+                                                        <select class="form-control" id="notedbyID">
+                                                            @foreach (var model in ViewBag.Managers)
+                                                            {
+                                                                var name = model.Manager;
+                                                                <option value="@name">@name</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col">
+                                                    <div>
+                                                        <font id="lblTitleHeader">Approved By:</font>
+                                                        <select class="form-control" id="approvedbyID">
+                                                            @foreach (var model in ViewBag.Managers)
+                                                            {
+                                                                var name = model.Manager;
+                                                                <option value="@name">@name</option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer" style="background-color:#3e4755;">
+                <button class="btn btn-danger" onclick="submitJO()" id="btn-submitjo"><i class="fa fa-send"></i> SUBMIT</button>
+                <button class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle"></i> CANCEL</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade md-confirmation" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog  modal-dialog-scrollable modal-dialog-centered">
+        <!-- Modal Content: begins -->
+        <div class=" modal-content">
+            <!-- Modal Body -->
+            <div class="modal-body" id="dvDetails">
+                <div class="body-message">
+                    <div id="divHeader" class="custom-table">
+                        <p id="tblLabel">Approval Email</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <img src="~/Content/gif/email.gif" style="width:70px;" />
+                        </div>
+                        <div class="col">
+                            <h6>
+                                An Email was sent to your supervisor, <br />
+                                the system will send you an email after the approval of JO.
+                            </h6>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-5">
+
+                        </div>
+                        <div class="col">
+                            <button class="btn btn-primary" data-dismiss="modal"><i class="fa fa-times-rectangle-o"></i> Close</button>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- Modal Content: ends -->
+            </div>
+            <!-- Modal Footer -->
+        </div>
+    </div>
+</div>
+
+@*----------------- E N D ---------------------------------------------------*@
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#searchAppTxt").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                       Type: 'POST',
+                        url: '@Url.Action("SearchSoftware", "JobOrders")',
+                        dataType: "json",
+                        data: { term: request.term },
+                        success: function (data) {
+
+                            if (data != 0   ) {
+
+                                response($.map(data, function (item) {
+                                    return {
+                                        label: item.application_name, value: item.application_name,
+                                    };
+                                }))
+
+                            } else {
+                                 var result = [
+                                    {
+                                     label: 'No matches found',
+                                     value: response.term
+                                    }
+                                ];
+                             response(result);
+                            }
+                        }
+                    })
+                 }
+            });
+    })
+</script>
+

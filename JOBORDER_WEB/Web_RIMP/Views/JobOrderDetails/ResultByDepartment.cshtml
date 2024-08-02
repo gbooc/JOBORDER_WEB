@@ -1,0 +1,155 @@
+﻿@model IEnumerable<Web_RIMP.Models.JOByDepartment>
+@{
+    var Counter = 1;
+    var ClosedCounter = 1;
+    var DelayedCounter = 1;
+    var OntimeCounter = 1;
+
+}
+
+@foreach (var model in Model)
+{
+    var department = model.DeptName;
+    var JoCount = model.Count;
+
+    <label id="lbl-deptname-@Counter" style="display:none;">@department</label>
+    <label id="lbl-jocount-@Counter" style="display:none;">@JoCount</label>
+
+    Counter++;
+}
+
+@foreach (var model in ViewBag.ClosedJO)
+{
+    var apc = model.apc;
+    var JoCount = model.jocompleted;
+
+    <label id="lbl-closed-apc-@ClosedCounter" style="display:none;">@apc</label>
+    <label id="lbl-closed-count-@ClosedCounter" style="display:none;">@JoCount</label>
+
+    ClosedCounter++;
+}
+
+@foreach (var model in ViewBag.DelayedJO)
+{
+    var apc = model.apc;
+    var JoCount = model.delayed_jo;
+
+    <label id="lbl-delayed-apc-@DelayedCounter" style="display:none;">@apc</label>
+    <label id="lbl-delayed-count-@DelayedCounter" style="display:none;">@JoCount</label>
+
+    DelayedCounter++;
+}
+
+@foreach (var model in ViewBag.OntimeJO)
+{
+    var apc = model.apc;
+    var JoCount = model.delayed_jo;
+
+    <label id="lbl-ontime-apc-@OntimeCounter" style="display:none;">@apc</label>
+    <label id="lbl-ontime-count-@OntimeCounter" style="display:none;">@JoCount</label>
+
+    OntimeCounter++;
+}
+
+<input type="text" id="txt-dept-count"   style="display:none;" value="@Counter" />
+<input type="text" id="txt-closed-count" style="display:none;"value="@ClosedCounter" />
+<input type="text" id="txt-delayed-count"style="display:none;"value="@DelayedCounter" />
+<input type="text" id="txt-ontime-count" style="display:none;"value="@OntimeCounter" />
+
+<div id="dvContainer">
+    <div id="dvBody">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="profile-card-4 z-depth-3">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="card-body text-center rounded-top">
+                                    <div class="user-box">
+                                        <img src="@ViewBag.IdPicture" alt="user avatar">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="card-body">
+                                    <ul class="list-group shadow-none">
+                                        <li class="list-group-item">
+                                            <div class="list-icon">
+                                                <i class="fa fa-user-circle"></i>
+                                            </div>
+                                            <div class="list-details">
+                                                <span>@ViewBag.FullName</span>
+                                                <small>Name</small>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-icon">
+                                                <i class="fa fa-id-card-o"></i>
+                                            </div>
+                                            <div class="list-details">
+                                                <span>@ViewBag.EmpId</span>
+                                                <small>ID Number</small>
+                                            </div>
+                                        </li>
+                                        <li class="list-group-item">
+                                            <div class="list-icon">
+                                                <i class="fa fa-building-o"></i>
+                                            </div>
+                                            <div class="list-details">
+                                                <span>@ViewBag.Department</span>
+                                                <small>Department</small>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-4" id="dvDetails">
+                <div class="row">
+                    <div class="col">
+                        <h4>JO BY DEPARTMENT</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <canvas id="by-dept-graph" height="240"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7" id="dvDetails" style="margin-left:30px;">
+                <canvas id="by-center-graph" height="300"></canvas>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-4">
+                <div class="row">
+                    <div class="col" id="dvDetails">
+                        <canvas id="closed-jo-graph" height="150"></canvas>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col" id="dvDetails">
+                        <canvas id="closed-delayed-graph" height="150"></canvas>
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col" id="dvDetails">
+                        <canvas id="closed-ontime-graph" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-7">
+
+            </div>
+        </div>
+    </div>
+</div>

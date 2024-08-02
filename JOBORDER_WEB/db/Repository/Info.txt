@@ -1,0 +1,8 @@
+﻿This Folder is for all CRUD operations of every tables in database.
+
+C - reate
+R - ead
+U - pdate
+D - elete
+
+- By: GBooc
